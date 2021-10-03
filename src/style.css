@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+
+.game-start,
+.game-setting,
+.game-over,
+.game-scoreboard,
+.game-play,
+.game-record {
+  position: absolute;
+  color: #ffffff;
+}
+
+.game-start {
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-start-title {
+  text-transform: uppercase;
+}
+
+.game-start-input {
+  width: 160px;
+  height: 64px;
+  margin-top: 10px;
+  text-align: center;
+  border: 1px solid #9499c3;
+  border-radius: 6px;
+  background-color: #000;
+  color: #ffffff;
+  outline: none;
+}
+
+.game-start-button {
+  cursor: pointer;
+  width: 160px;
+  height: 64px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  background-color: #ffffff;
+}
+
+.game-start-button:hover {
+  color: #ffffff;
+  background-color: #0070f3;
+  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+}
+
+.game-record {
+  top: 10px;
+  right: 20px;
+  font-size: 20px;
+}
