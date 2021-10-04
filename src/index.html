@@ -2,14 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      http-equiv="X-UA-Compatible"
-      content="IE=edge"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TO THE SPACE</title>
   </head>
   <body>
@@ -23,33 +17,21 @@
 
     <!-- Game Start -->
     <div class="game-start">
-      <h1 class="game-start-title">
+      <h1 class="game-title">
         <span>to the</span>
         <span>space</span>
       </h1>
 
-      <input
-        class="game-start-input"
-        type="text"
-        placeholder="ex) Elon Musk"
-      />
-      <button class="game-start-button">
-        START
-      </button>
+      <input class="nickname-input" type="text" placeholder="ex) Elon Musk" />
+      <button class="start-button">START</button>
+      <span class="input-error"></span>
     </div>
 
     <!-- Game Setting -->
     <div class="game-setting">
       <span>
         <label for="crew">인원</label>
-        <input
-          type="range"
-          id="crew"
-          min="1"
-          max="4"
-          value="2"
-          step="1"
-        />
+        <input type="range" id="crew" min="1" max="4" value="2" step="1" />
       </span>
 
       <span>
@@ -59,14 +41,7 @@
 
       <span>
         <label for="fuel">연료량</label>
-        <input
-          type="range"
-          id="fuel"
-          min="1"
-          max="1000"
-          value="500"
-          step="5"
-        />
+        <input type="range" id="fuel" min="1" max="1000" value="500" step="5" />
       </span>
     </div>
 

@@ -12,7 +12,7 @@ class SpaceShip {
   loadSpaceShip() {
     const gltfLoader = new GLTFLoader(this.app.loadingManager);
 
-    gltfLoader.load("/models/spaceship/spaceShip.gltf", (gltf) => {
+    gltfLoader.load("/models/spaceship/scene.gltf", (gltf) => {
       this.spaceShip = gltf.scene;
       this.spaceShip.position.y = -0.5;
       this.spaceShip.scale.set(0.2, 0.2, 0.2);

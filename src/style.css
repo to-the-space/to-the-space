@@ -48,11 +48,6 @@ body {
   will-change: transform;
 }
 
-.loading-bar.ended {
-  transform-origin: top left;
-  transition: transform 1.5s ease-in-out;
-}
-
 .game-start {
   top: 50px;
   left: 50%;
@@ -63,11 +58,11 @@ body {
   align-items: center;
 }
 
-.game-start-title {
+.game-title {
   text-transform: uppercase;
 }
 
-.game-start-input {
+.nickname-input {
   width: 160px;
   height: 64px;
   margin-top: 10px;
@@ -79,7 +74,7 @@ body {
   outline: none;
 }
 
-.game-start-button {
+.start-button {
   cursor: pointer;
   width: 160px;
   height: 64px;
@@ -88,6 +83,11 @@ body {
   border-radius: 6px;
   color: #000;
   background-color: #ffffff;
+}
+
+.input-error {
+  font-size: 18px;
+  color: #ff0000;
 }
 
 .game-start-button:hover {
@@ -108,4 +108,8 @@ body {
   right: 20px;
   font-size: 20px;
   opacity: 1;
+}
+
+.hidden {
+  display: none;
 }
