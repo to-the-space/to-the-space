@@ -5,8 +5,11 @@
 
 html,
 body {
+  height: 100%;
+  width: 100%;
   overflow: hidden;
   background-color: #000000;
+  position: relative;
 }
 
 .webgl {
@@ -17,99 +20,121 @@ body {
   opacity: 0;
 }
 
-.game-loading,
-.game-start,
-.game-setting,
-.game-over,
-.game-scoreboard,
-.game-play,
-.game-record {
-  position: absolute;
-  color: #ffffff;
-  opacity: 0;
-}
+#ui {
+  height: 100%;
+  width: 100%;
 
-.game-loading {
-  top: 50%;
-  left: 50%;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  background-color: #000000;
-}
+  * {
+    color: #ffffff;
+  }
 
-.loading-bar {
-  width: 300px;
-  height: 2px;
-  margin-top: 10px;
-  background-color: #ffffff;
-  transform: scaleX(0);
-  transform-origin: top left;
-  transition: transform 0.5s;
-  will-change: transform;
-}
+  .game-record {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 20px;
+    opacity: 1;
+  }
 
-.game-start {
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+  .game-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    background-color: #000000;
+    opacity: 0;
+    visibility: hidden;
 
-.game-title {
-  text-transform: uppercase;
-}
+    .loading-bar {
+      width: 300px;
+      height: 2px;
+      margin-top: 10px;
+      transform: scaleX(0);
+      background-color: #ffffff;
+      transform-origin: top left;
+      transition: transform 0.5s;
+      will-change: transform;
+    }
+  }
 
-.nickname-input {
-  width: 160px;
-  height: 64px;
-  margin-top: 10px;
-  text-align: center;
-  border: 1px solid #9499c3;
-  border-radius: 6px;
-  background-color: #000;
-  color: #ffffff;
-  outline: none;
-}
+  .game-start {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
 
-.start-button {
-  cursor: pointer;
-  width: 160px;
-  height: 64px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 6px;
-  color: #000;
-  background-color: #ffffff;
-}
+    .game-title {
+      text-transform: uppercase;
+    }
 
-.input-error {
-  font-size: 18px;
-  color: #ff0000;
-}
+    .nickname-input {
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      text-align: center;
+      border: 1px solid #9499c3;
+      border-radius: 6px;
+      background-color: #000;
+      color: #ffffff;
+      outline: none;
+    }
 
-.game-start-button:hover {
-  color: #ffffff;
-  background-color: #0070f3;
-  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
-}
+    .start-button {
+      cursor: pointer;
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      background-color: #ffffff;
+    }
 
-.game-setting {
-  bottom: 0px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-}
+    .input-error {
+      font-size: 18px;
+      color: #ff0000;
+    }
 
-.game-record {
-  top: 10px;
-  right: 20px;
-  font-size: 20px;
-  opacity: 1;
-}
+    .start-button:hover {
+      color: #ffffff;
+      background-color: #0070f3;
+      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+    }
+  }
 
-.hidden {
-  display: none;
+  .game-setting {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &.loading {
+    .game-loading {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &.start {
+    .game-start {
+      visibility: visible;
+    }
+  }
+
+  &.setting {
+    .game-setting {
+      visibility: visible;
+    }
+  }
 }
