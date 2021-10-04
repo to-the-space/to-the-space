@@ -1,7 +1,6 @@
 {
   "name": "to-the-space",
   "version": "1.0.0",
-  "description": "",
   "private": true,
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",
@@ -39,6 +38,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "firebase": "^9.1.1",
     "gsap": "^3.8.0",
     "three": "^0.133.0"
   }

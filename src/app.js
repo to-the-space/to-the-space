@@ -1,35 +1,30 @@
 import * as THREE from "three";
-import gsap from "gsap";
 import "./style.css";
 
-import { World } from "./game/World";
-import { SpaceShip } from "./game/SpaceShip";
-import { Stars } from "./game/Stars";
+import { saveUserNickname } from "./utils/database";
+import { showView, hideView, showInputError } from "./utils/transition";
 
-const STATES = {
-  LOADING: 0,
-  SETTING: 1,
-  PLAYING: 2,
-  ENDED: 3,
-  RESULT: 4,
-  ERROR: 5,
-};
+import { World } from "./game/World";
+import { Stars } from "./game/Stars";
+import { SpaceShip } from "./game/SpaceShip";
 
 class App {
   constructor() {
-    this.state = STATES.LOADING;
-
     this.dom = {
       canvas: document.querySelector("canvas.webgl"),
       gameLoading: document.querySelector(".game-loading"),
       gameStart: document.querySelector(".game-start"),
       gameSetting: document.querySelector(".game-setting"),
+      gamePlay: document.querySelector(".game-play"),
       gameOver: document.querySelector(".game-over"),
       gameScoreboard: document.querySelector(".gameScoreBoard"),
       gameError: document.querySelector(".game-error"),
+      input: {
+        nicknameInput: document.querySelector(".nickname-input"),
+      },
       button: {
         startButton: document.querySelector(".start-button"),
-        LaunchButton: document.querySelector(".launch-button"),
+        launchButton: document.querySelector(".launch-button"),
         restartButton: document.querySelector(".restart-button"),
       },
       loading: {
@@ -37,36 +32,41 @@ class App {
         loadingPercentage: document.querySelector(".loading-percentage"),
       },
       text: {
+        inputError: document.querySelector(".input-error"),
         errorText: document.querySelector("error-text"),
       },
     };
 
-    this.loading();
+    window.addEventListener("load", this.loading(), false);
+
+    this.dom.button.startButton.addEventListener("click", () => {
+      if (this.dom.input.nicknameInput.value) {
+        this.start();
+        showView(this.dom.gameSetting, 1);
+        hideView(this.dom.gameStart);
+        this.dom.text.inputError.textContent = "";
+      } else {
+        showInputError(this.dom.text.inputError);
+      }
+    });
 
     this.world = new World(this);
-    this.spaceShip = new SpaceShip(this);
     this.stars = new Stars(this);
-  }
-
-  updateState(newState) {
-    this.state = newState;
+    this.spaceShip = new SpaceShip(this);
   }
 
   loading() {
-    gsap.to(this.dom.gameLoading, { opacity: 1 });
+    showView(this.dom.gameLoading, 0);
 
     this.loadingManager = new THREE.LoadingManager();
 
     this.loadingManager.onLoad = () => {
-      gsap.to(this.dom.canvas, { opacity: 1, duration: 1 });
-      gsap.to(this.dom.gameStart, { opacity: 1, duration: 1 });
-      gsap.to(this.dom.gameLoading, { opacity: 0 });
-
-      this.dom.loading.loadingBar.classList.add("ended");
-      this.dom.loading.loadingBar.style.transform = "";
+      showView(this.dom.canvas, 1);
+      showView(this.dom.gameStart, 1);
+      hideView(this.dom.gameLoading);
     };
 
-    this.loadingManager.onProgress = async (url, itemsLoaded, itemsTotal) => {
+    this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
       const progressRatio = itemsLoaded / itemsTotal;
       const percentage = Math.floor(progressRatio * 100);
 
@@ -74,12 +74,13 @@ class App {
       this.dom.loading.loadingPercentage.textContent = `${percentage}%`;
     };
 
-    this.loadingManager.onError = async () => {
-      this.updateState(STATES.ERROR);
-    };
+    this.loadingManager.onError = () => {};
   }
 
-  start() {}
+  start() {
+    const nickname = this.dom.input.nicknameInput.value;
+    saveUserNickname(nickname);
+  }
 
   setting() {}
 
