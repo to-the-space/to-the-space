@@ -2,25 +2,111 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>TO THE SPACE</title>
   </head>
   <body>
     <canvas class="webgl"></canvas>
 
-    <div class="game-start">
-      <h1>
-        <span>to the</span>
-        <span>space</span>
-
-        <input type="text" placeholder="ex) Elon Musk" />
-        <button>START</button>
-      </h1>
+    <!-- Loading -->
+    <div class="game-loading">
+      <span class="loading-percentage">0%</span>
+      <div class="loading-bar"></div>
     </div>
 
-    <div class="game-setting"></div>
-    <div class="game-over"></div>
-    <div class="game-scoreboard"></div>
+    <!-- Game Start -->
+    <div class="game-start">
+      <h1 class="game-start-title">
+        <span>to the</span>
+        <span>space</span>
+      </h1>
+
+      <input
+        class="game-start-input"
+        type="text"
+        placeholder="ex) Elon Musk"
+      />
+      <button class="game-start-button">
+        START
+      </button>
+    </div>
+
+    <!-- Game Setting -->
+    <div class="game-setting">
+      <span>
+        <label for="crew">인원</label>
+        <input
+          type="range"
+          id="crew"
+          min="1"
+          max="4"
+          value="2"
+          step="1"
+        />
+      </span>
+
+      <span>
+        <label for="weather">날씨</label>
+        <input type="range" id="weather" />
+      </span>
+
+      <span>
+        <label for="fuel">연료량</label>
+        <input
+          type="range"
+          id="fuel"
+          min="1"
+          max="1000"
+          value="500"
+          step="5"
+        />
+      </span>
+    </div>
+
+    <!-- Game Play -->
+    <div class="game-play">
+      <div></div>
+      <div></div>
+    </div>
+
+    <!-- Game Over -->
+    <div class="game-over">
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Scoreboard -->
+    <div class="game-scoreboard">
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
+    <!-- Error -->
+    <div class="game-error">
+      <span class="error-message"></span>
+    </div>
+
+    <!-- Record -->
+    <div class="game-record">
+      <span>Highest Score:</span>
+      <span>0</span>
+    </div>
   </body>
 </html>
