@@ -6,6 +6,7 @@
 html,
 body {
   overflow: hidden;
+  background-color: #000000;
 }
 
 .webgl {
@@ -13,8 +14,10 @@ body {
   top: 0;
   left: 0;
   outline: none;
+  opacity: 0;
 }
 
+.game-loading,
 .game-start,
 .game-setting,
 .game-over,
@@ -23,6 +26,31 @@ body {
 .game-record {
   position: absolute;
   color: #ffffff;
+  opacity: 0;
+}
+
+.game-loading {
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  background-color: #000000;
+}
+
+.loading-bar {
+  width: 300px;
+  height: 2px;
+  margin-top: 10px;
+  background-color: #ffffff;
+  transform: scaleX(0);
+  transform-origin: top left;
+  transition: transform 0.5s;
+  will-change: transform;
+}
+
+.loading-bar.ended {
+  transform-origin: top left;
+  transition: transform 1.5s ease-in-out;
 }
 
 .game-start {
@@ -68,8 +96,16 @@ body {
   box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
 }
 
+.game-setting {
+  bottom: 0px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
 .game-record {
   top: 10px;
   right: 20px;
   font-size: 20px;
+  opacity: 1;
 }
