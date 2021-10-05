@@ -1,6 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap");
+
 * {
   margin: 0;
   padding: 0;
+  font-family: "Space Grotesk", sans-serif;
 }
 
 html,
@@ -10,6 +13,10 @@ body {
   overflow: hidden;
   background-color: #000000;
   position: relative;
+}
+
+li {
+  list-style: none;
 }
 
 .webgl {
@@ -97,26 +104,129 @@ body {
       background-color: #ffffff;
     }
 
+    .start-button:hover {
+      color: #ffffff;
+      background-color: #0070f3;
+      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+    }
+
     .input-error {
       font-size: 18px;
       color: #ff0000;
     }
+  }
 
-    .start-button:hover {
+  .game-setting {
+    opacity: 0;
+    visibility: hidden;
+
+    .setting-status {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 40px;
+      list-style: none;
+    }
+
+    .launch-setting {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 40px;
+      display: flex;
+      flex-direction: column;
+
+      span {
+        margin-top: 20px;
+      }
+    }
+
+    .launch-button {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      cursor: pointer;
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      background-color: #ffffff;
+    }
+
+    .launch-button:hover {
       color: #ffffff;
       background-color: #0070f3;
       box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
     }
   }
 
-  .game-setting {
-    position: absolute;
-    bottom: 0px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
+  .game-play {
     opacity: 0;
     visibility: hidden;
+
+    .count-down {
+      position: absolute;
+      top: 25%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 50px;
+    }
+
+    .gauges {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+    }
+
+    .sc-gauge {
+      width: 200px;
+      height: 200px;
+      background-color: #1d1f4b;
+      padding: 5px;
+      border-radius: 6px;
+    }
+    .sc-background {
+      position: relative;
+      height: 100px;
+      margin-bottom: 10px;
+      background-color: #000;
+      border-radius: 150px 150px 0 0;
+      overflow: hidden;
+      text-align: center;
+    }
+    .sc-mask {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      left: 20px;
+      height: 80px;
+      background-color: #000;
+      border-radius: 150px 150px 0 0;
+    }
+    .sc-percentage {
+      position: absolute;
+      top: 100px;
+      left: -200%;
+      width: 400%;
+      height: 400%;
+      margin-left: 100px;
+      background-color: #ff0000;
+      rotate: 170deg;
+    }
+    .sc-percentage {
+      transform: rotate(50deg);
+      transform-origin: top center;
+    }
+    .sc-value {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      font-size: 30px;
+      font-weight: 700;
+    }
   }
 
   &.loading {
@@ -134,6 +244,13 @@ body {
 
   &.setting {
     .game-setting {
+      visibility: visible;
+    }
+  }
+
+  &.play {
+    .game-play {
+      opacity: 1;
       visibility: visible;
     }
   }

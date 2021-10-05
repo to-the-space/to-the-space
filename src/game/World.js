@@ -14,18 +14,18 @@ class World {
 
     this.clock = new THREE.Clock();
 
-    this._addLight();
-    this._addCamera();
-    this._addControl();
-    this._render();
-    this._tick();
+    this.addLight();
+    this.addCamera();
+    this.addControl();
+    this.render();
+    this.tick();
 
     window.addEventListener("resize", () => {
-      this._onWindowResize();
+      this.onWindowResize();
     });
   }
 
-  _addLight() {
+  addLight() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 
     const pointLight = new THREE.PointLight(0xffffff, 0.5);
@@ -36,7 +36,7 @@ class World {
     this.scene.add(pointLight, ambientLight);
   }
 
-  _addCamera() {
+  addCamera() {
     this.camera = new THREE.PerspectiveCamera(
       75,
       this.sizes.width / this.sizes.height,
@@ -44,17 +44,18 @@ class World {
       100,
     );
 
-    this.camera.position.z = 3;
-
+    this.camera.position.z = 4;
     this.scene.add(this.camera);
   }
 
-  _addControl() {
+  addControl() {
     this.controls = new OrbitControls(this.camera, this.app.dom.canvas);
     this.controls.enableDamping = true;
+    // this.controls.enablePan = false;
+    // this.controls.enableZoom = false;
   }
 
-  _render() {
+  render() {
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.app.dom.canvas,
       alpha: true,
@@ -65,17 +66,17 @@ class World {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   }
 
-  _tick() {
+  tick() {
     const elapsedTime = this.clock.getElapsedTime();
 
     this.controls.update();
 
     this.renderer.render(this.scene, this.camera);
 
-    window.requestAnimationFrame(this._tick.bind(this));
+    window.requestAnimationFrame(this.tick.bind(this));
   }
 
-  _onWindowResize() {
+  onWindowResize() {
     this.sizes.width = window.innerWidth;
     this.sizes.height = window.innerHeight;
 
