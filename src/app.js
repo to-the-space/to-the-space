@@ -8,6 +8,9 @@ import { showView, showInputError } from "./utils/transition";
 import { World } from "./game/World";
 import { Stars } from "./game/Stars";
 import { SpaceShip } from "./game/SpaceShip";
+import { LaunchPad } from "./game/LaunchPad";
+import { SpaceStation } from "./game/SpaceStation";
+import { Controls } from "./game/Controls";
 
 class App {
   constructor() {
@@ -15,6 +18,7 @@ class App {
       LOADING: "loading",
       START: "start",
       SETTING: "setting",
+      PLAY: "play",
     };
 
     this.dom = {
@@ -25,23 +29,22 @@ class App {
       gameSetting: document.querySelector(".game-setting"),
       gamePlay: document.querySelector(".game-play"),
       gameOver: document.querySelector(".game-over"),
-      gameScoreboard: document.querySelector(".gameScoreBoard"),
       gameError: document.querySelector(".game-error"),
       input: {
-        nicknameInput: document.querySelector(".nickname-input"),
+        nickname: document.querySelector(".nickname-input"),
       },
       button: {
-        startButton: document.querySelector(".start-button"),
-        launchButton: document.querySelector(".launch-button"),
-        restartButton: document.querySelector(".restart-button"),
+        start: document.querySelector(".start-button"),
+        launch: document.querySelector(".launch-button"),
+        restart: document.querySelector(".restart-button"),
       },
       loading: {
-        loadingBar: document.querySelector(".loading-bar"),
-        loadingPercentage: document.querySelector(".loading-percentage"),
+        bar: document.querySelector(".loading-bar"),
+        percentage: document.querySelector(".loading-percentage"),
       },
       text: {
+        countDown: document.querySelector(".count-down"),
         inputError: document.querySelector(".input-error"),
-        errorText: document.querySelector("error-text"),
       },
     };
 
@@ -50,6 +53,8 @@ class App {
     this.world = new World(this);
     this.stars = new Stars(this);
     this.spaceShip = new SpaceShip(this);
+    this.launchPad = new LaunchPad(this);
+    this.spaceStation = new SpaceStation(this);
   }
 
   updateState(newState) {
@@ -74,6 +79,9 @@ class App {
       case this.STATES.SETTING:
         this.setting();
         break;
+      case this.STATES.PLAY:
+        this.playing();
+        break;
     }
   }
 
@@ -81,6 +89,8 @@ class App {
     this.loadingManager = new THREE.LoadingManager();
 
     this.loadingManager.onLoad = () => {
+      this.controls = new Controls(this);
+
       gsap.delayedCall(0.5, () => {
         this.updateState(this.STATES.START);
         showView(this.dom.canvas, 1);
@@ -92,21 +102,22 @@ class App {
       const progressRatio = itemsLoaded / itemsTotal;
       const percentage = Math.floor(progressRatio * 100);
 
-      this.dom.loading.loadingBar.style.transform = `scaleX(${progressRatio})`;
-      this.dom.loading.loadingPercentage.textContent = `${percentage}%`;
+      this.dom.loading.bar.style.transform = `scaleX(${progressRatio})`;
+      this.dom.loading.percentage.textContent = `${percentage}%`;
     };
 
     this.loadingManager.onError = () => {};
   }
 
   start() {
-    this.dom.button.startButton.addEventListener("click", () => {
-      if (this.dom.input.nicknameInput.value) {
+    this.dom.button.start.addEventListener("click", () => {
+      if (this.dom.input.nickname.value) {
         this.updateState(this.STATES.SETTING);
         showView(this.dom.gameSetting, 1);
         this.dom.text.inputError.textContent = "";
 
-        const nickname = this.dom.input.nicknameInput.value;
+        const nickname = this.dom.input.nickname.value;
+
         saveUserNickname(nickname);
       } else {
         showInputError(this.dom.text.inputError);
@@ -114,9 +125,33 @@ class App {
     });
   }
 
-  setting() {}
+  setting() {
+    this.dom.button.launch.addEventListener("click", () => {
+      this.updateState(this.STATES.PLAY);
+    });
+  }
 
-  playing() {}
+  playing() {
+    let count = 5;
+
+    const intervalID = setInterval(() => {
+      count--;
+      this.dom.text.countDown.textContent = count;
+
+      if (count < 3) {
+        this.dom.text.countDown.textContent = "";
+        clearInterval(intervalID);
+      }
+    }, 1000);
+
+    setTimeout(() => {
+      this.spaceShip.launch();
+    }, 6000);
+
+    setTimeout(() => {
+      window.cancelAnimationFrame(this.spaceShip.launchRequestId);
+    }, 30000);
+  }
 
   result() {}
 
