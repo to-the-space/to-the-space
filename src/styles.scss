@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #000000;
+  position: relative;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+  opacity: 0;
+}
+
+#ui {
+  height: 100%;
+  width: 100%;
+
+  * {
+    color: #ffffff;
+  }
+
+  .game-record {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 20px;
+    opacity: 1;
+  }
+
+  .game-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    background-color: #000000;
+    opacity: 0;
+    visibility: hidden;
+
+    .loading-bar {
+      width: 300px;
+      height: 2px;
+      margin-top: 10px;
+      transform: scaleX(0);
+      background-color: #ffffff;
+      transform-origin: top left;
+      transition: transform 0.5s;
+      will-change: transform;
+    }
+  }
+
+  .game-start {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+
+    .game-title {
+      text-transform: uppercase;
+    }
+
+    .nickname-input {
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      text-align: center;
+      border: 1px solid #9499c3;
+      border-radius: 6px;
+      background-color: #000;
+      color: #ffffff;
+      outline: none;
+    }
+
+    .start-button {
+      cursor: pointer;
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      background-color: #ffffff;
+    }
+
+    .input-error {
+      font-size: 18px;
+      color: #ff0000;
+    }
+
+    .start-button:hover {
+      color: #ffffff;
+      background-color: #0070f3;
+      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+    }
+  }
+
+  .game-setting {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &.loading {
+    .game-loading {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &.start {
+    .game-start {
+      visibility: visible;
+    }
+  }
+
+  &.setting {
+    .game-setting {
+      visibility: visible;
+    }
+  }
+}
