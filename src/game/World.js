@@ -28,7 +28,7 @@ class World {
   addLight() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 
-    const pointLight = new THREE.PointLight(0xffffff, 0.5);
+    const pointLight = new THREE.PointLight(0xffffff, 1.5);
     pointLight.position.x = 2;
     pointLight.position.y = 3;
     pointLight.position.z = 4;
@@ -37,12 +37,7 @@ class World {
   }
 
   addCamera() {
-    this.camera = new THREE.PerspectiveCamera(
-      75,
-      this.sizes.width / this.sizes.height,
-      0.1,
-      100,
-    );
+    this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 250000000);
 
     this.camera.position.z = 4;
     this.scene.add(this.camera);

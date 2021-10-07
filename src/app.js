@@ -7,9 +7,10 @@ import { showView, showInputError } from "./utils/transition";
 
 import { World } from "./game/World";
 import { Stars } from "./game/Stars";
-import { SpaceShip } from "./game/SpaceShip";
+import { Spaceship } from "./game/spaceship";
 import { LaunchPad } from "./game/LaunchPad";
 import { SpaceStation } from "./game/SpaceStation";
+import { SkyBox } from "./game/SkyBox";
 import { Controls } from "./game/Controls";
 
 class App {
@@ -52,8 +53,9 @@ class App {
 
     this.world = new World(this);
     this.stars = new Stars(this);
-    this.spaceShip = new SpaceShip(this);
+    this.spaceship = new Spaceship(this);
     this.launchPad = new LaunchPad(this);
+    this.skyBox = new SkyBox(this);
     this.spaceStation = new SpaceStation(this);
   }
 
