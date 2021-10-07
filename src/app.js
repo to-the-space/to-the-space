@@ -140,19 +140,19 @@ class App {
       count--;
       this.dom.text.countDown.textContent = count;
 
-      if (count < 3) {
+      if (count < 0) {
         this.dom.text.countDown.textContent = "";
         clearInterval(intervalID);
       }
     }, 1000);
 
     setTimeout(() => {
-      this.spaceShip.launch();
+      this.spaceship.launch();
     }, 6000);
 
     setTimeout(() => {
-      window.cancelAnimationFrame(this.spaceShip.launchRequestId);
-    }, 30000);
+      window.cancelAnimationFrame(this.spaceship.launchRequestId);
+    }, 50000);
   }
 
   result() {}
