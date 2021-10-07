@@ -1,6 +1,6 @@
+import "./styles/style.scss";
 import * as THREE from "three";
 import gsap from "gsap";
-import "./styles.scss";
 
 import { saveUserNickname } from "./utils/database";
 import { showView, showInputError } from "./utils/transition";
