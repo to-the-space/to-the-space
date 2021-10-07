@@ -1,14 +1,15 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const Dotenv = require("dotenv-webpack");
 const path = require("path");
 
 module.exports = {
   entry: path.resolve(__dirname, "../src/app.js"),
   output: {
-    filename: "bundle.[contenthash].js",
     path: path.resolve(__dirname, "../dist"),
+    filename: "bundle.[contenthash].js",
   },
   devtool: "source-map",
   plugins: [
@@ -23,15 +24,14 @@ module.exports = {
       template: path.resolve(__dirname, "../src/index.html"),
       minify: true,
     }),
-    new MiniCSSExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "../src/styles/style.css",
+    }),
     new Dotenv(),
+    new CleanWebpackPlugin(),
   ],
   module: {
     rules: [
-      {
-        test: /\.s[ac]ss$/i,
-        use: ["style-loader", "css-loader", "sass-loader"],
-      },
       {
         test: /\.(html)$/,
         use: ["html-loader"],
@@ -43,7 +43,25 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCSSExtractPlugin.loader, "css-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          process.env.NODE_ENV !== "production"
+            ? "style-loader"
+            : MiniCssExtractPlugin.loader,
+          "css-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              implementation: require("sass"),
+              sassOptions: {
+                fiber: require("fibers"),
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.(jpg|png|gif|svg)$/,

@@ -1,0 +1,257 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #000000;
+  position: relative;
+}
+
+li {
+  list-style: none;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+  opacity: 0;
+}
+
+#ui {
+  height: 100%;
+  width: 100%;
+
+  * {
+    color: #ffffff;
+  }
+
+  .game-record {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 20px;
+    opacity: 1;
+  }
+
+  .game-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    background-color: #000000;
+    opacity: 0;
+    visibility: hidden;
+
+    .loading-bar {
+      width: 300px;
+      height: 2px;
+      margin-top: 10px;
+      transform: scaleX(0);
+      background-color: #ffffff;
+      transform-origin: top left;
+      transition: transform 0.5s;
+      will-change: transform;
+    }
+  }
+
+  .game-start {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+
+    .game-title {
+      text-transform: uppercase;
+    }
+
+    .nickname-input {
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      text-align: center;
+      border: 1px solid #9499c3;
+      border-radius: 6px;
+      background-color: #000;
+      color: #ffffff;
+      outline: none;
+    }
+
+    .start-button {
+      cursor: pointer;
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      background-color: #ffffff;
+    }
+
+    .start-button:hover {
+      color: #ffffff;
+      background-color: #0070f3;
+      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+    }
+
+    .input-error {
+      font-size: 18px;
+      color: #ff0000;
+    }
+  }
+
+  .game-setting {
+    opacity: 0;
+    visibility: hidden;
+
+    .setting-status {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 40px;
+      list-style: none;
+    }
+
+    .launch-setting {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 40px;
+      display: flex;
+      flex-direction: column;
+
+      span {
+        margin-top: 20px;
+      }
+    }
+
+    .launch-button {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      cursor: pointer;
+      width: 160px;
+      height: 64px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      background-color: #ffffff;
+    }
+
+    .launch-button:hover {
+      color: #ffffff;
+      background-color: #0070f3;
+      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+    }
+  }
+
+  .game-play {
+    opacity: 0;
+    visibility: hidden;
+
+    .count-down {
+      position: absolute;
+      top: 25%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 50px;
+    }
+
+    .gauges {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+    }
+
+    .sc-gauge {
+      width: 200px;
+      height: 200px;
+      background-color: #1d1f4b;
+      padding: 5px;
+      border-radius: 6px;
+    }
+    .sc-background {
+      position: relative;
+      height: 100px;
+      margin-bottom: 10px;
+      background-color: #000;
+      border-radius: 150px 150px 0 0;
+      overflow: hidden;
+      text-align: center;
+    }
+    .sc-mask {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      left: 20px;
+      height: 80px;
+      background-color: #000;
+      border-radius: 150px 150px 0 0;
+    }
+    .sc-percentage {
+      position: absolute;
+      top: 100px;
+      left: -200%;
+      width: 400%;
+      height: 400%;
+      margin-left: 100px;
+      background-color: #ff0000;
+      rotate: 170deg;
+    }
+    .sc-percentage {
+      transform: rotate(50deg);
+      transform-origin: top center;
+    }
+    .sc-value {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      font-size: 30px;
+      font-weight: 700;
+    }
+  }
+
+  &.loading {
+    .game-loading {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &.start {
+    .game-start {
+      visibility: visible;
+    }
+  }
+
+  &.setting {
+    .game-setting {
+      visibility: visible;
+    }
+  }
+
+  &.play {
+    .game-play {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
