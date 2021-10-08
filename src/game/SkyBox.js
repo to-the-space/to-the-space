@@ -13,12 +13,12 @@ class SkyBox {
     );
 
     this.cube = await cubeTextureLoader.loadAsync([
-      "/textures/spaceCubeMap/spaceX+.png",
       "/textures/spaceCubeMap/spaceX-.png",
-      "/textures/spaceCubeMap/spaceY+.png",
+      "/textures/spaceCubeMap/spaceX+.png",
       "/textures/spaceCubeMap/spaceY-.png",
-      "/textures/spaceCubeMap/spaceZ+.png",
+      "/textures/spaceCubeMap/spaceY+.png",
       "/textures/spaceCubeMap/spaceZ-.png",
+      "/textures/spaceCubeMap/spaceZ+.png",
     ]);
 
     this.app.world.scene.background = this.cube;
