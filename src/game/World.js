@@ -22,21 +22,27 @@ class World {
       0.1,
       250000000,
     );
-    this.camera.position.set(0, 10, 30);
-    this.camera.updateMatrix();
+    this.camera.position.set(0, 0, 20);
     this.scene.add(this.camera);
 
     // control
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableDamping = true;
+    this.controls.enablePan = false;
 
     // light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.position.set(0, 100, 100);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    directionalLight.position.set(30, 100, 100);
     directionalLight.castShadow = true;
 
-    this.scene.add(directionalLight);
+    directionalLight.shadow.mapSize.width = 512;
+    directionalLight.shadow.mapSize.height = 512;
+    directionalLight.shadow.camera.near = 0.5;
+    directionalLight.shadow.camera.far = 500;
+
+    this.scene.add(ambientLight, directionalLight);
 
     // render
     this.renderer = new THREE.WebGLRenderer({
@@ -46,6 +52,7 @@ class World {
     });
     this.renderer.setSize(this.sizes.width, this.sizes.height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.shadowMap.enabled = true;
 
     this.tick();
 

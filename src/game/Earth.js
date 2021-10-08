@@ -10,12 +10,16 @@ class Earth {
 
   async loadEarth() {
     const gltfLoader = new GLTFLoader(this.app.loadingManager);
-    const gltf = await gltfLoader.loadAsync("/models/earth/scene.gltf");
 
+    const gltf = await gltfLoader.loadAsync("/models/earth/scene.gltf");
+    gltf.scene.traverse((node) => {
+      if (node.isMesh) {
+        node.receiveShadow = true;
+      }
+    });
     this.earth = gltf.scene;
-    this.receiveShadow = true;
-    this.castShadow = false;
     this.earth.rotation.x = Math.PI * 1.5;
+    this.earth.position.y = -10;
 
     this.app.world.scene.add(this.earth);
   }
