@@ -6,7 +6,6 @@ class Moon {
     this.app = app;
 
     this.clock = new THREE.Clock();
-
     this.solarSystem = new THREE.Object3D();
 
     this.loadMoon();
@@ -14,13 +13,16 @@ class Moon {
 
   async loadMoon() {
     const gltfLoader = new GLTFLoader(this.app.loadingManager);
-    const gltf = await gltfLoader.loadAsync("/models/moon/scene.gltf");
 
+    const gltf = await gltfLoader.loadAsync("/models/moon/scene.gltf");
+    gltf.scene.traverse((node) => {
+      if (node.isMesh) {
+        node.receiveShadow = true;
+      }
+    });
     this.moon = gltf.scene;
-    this.moon.position.y;
     this.moon.scale.set(150, 150, 150);
-    this.moon.position.x = 3000;
-    this.moon.position.y = -400;
+    this.moon.position.set(3000, -400);
 
     this.solarSystem.add(this.moon);
     this.app.world.scene.add(this.solarSystem);
