@@ -12,9 +12,10 @@ class LaunchPad {
     const gltf = await gltfLoader.loadAsync("/models/launchPad/scene.gltf");
 
     this.launchPad = gltf.scene;
-    this.launchPad.position.y = -2.3;
-    this.launchPad.scale.set(1, 1, 1);
+    this.launchPad.castShadow = true;
+    this.launchPad.scale.set(3, 3, 3);
 
+    this.launchPad.updateMatrix();
     this.app.world.scene.add(this.launchPad);
   }
 
