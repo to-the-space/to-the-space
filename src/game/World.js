@@ -2,10 +2,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 class World {
-  constructor(app) {
-    this.app = app;
-
-    this.scene = new THREE.Scene();
+  constructor(canvas) {
+    this.canvas = canvas;
 
     this.sizes = {
       width: window.innerWidth,
@@ -14,51 +12,44 @@ class World {
 
     this.clock = new THREE.Clock();
 
-    this.addLight();
-    this.addCamera();
-    this.addControl();
-    this.render();
-    this.tick();
+    // scene
+    this.scene = new THREE.Scene();
 
-    window.addEventListener("resize", () => {
-      this.onWindowResize();
-    });
-  }
-
-  addLight() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-
-    const pointLight = new THREE.PointLight(0xffffff, 1.5);
-    pointLight.position.x = 2;
-    pointLight.position.y = 3;
-    pointLight.position.z = 4;
-
-    this.scene.add(pointLight, ambientLight);
-  }
-
-  addCamera() {
-    this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 250000000);
-
-    this.camera.position.z = 4;
+    // camera
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      this.sizes.width / this.sizes.height,
+      0.1,
+      250000000,
+    );
+    this.camera.position.set(0, 10, 30);
+    this.camera.updateMatrix();
     this.scene.add(this.camera);
-  }
 
-  addControl() {
-    this.controls = new OrbitControls(this.camera, this.app.dom.canvas);
+    // control
+    this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableDamping = true;
-    // this.controls.enablePan = false;
-    // this.controls.enableZoom = false;
-  }
 
-  render() {
+    // light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    directionalLight.position.set(0, 100, 100);
+    directionalLight.castShadow = true;
+
+    this.scene.add(directionalLight);
+
+    // render
     this.renderer = new THREE.WebGLRenderer({
-      canvas: this.app.dom.canvas,
+      canvas: this.canvas,
       alpha: true,
       antialias: true,
     });
-
     this.renderer.setSize(this.sizes.width, this.sizes.height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    this.tick();
+
+    window.addEventListener("resize", () => this.onWindowResize());
   }
 
   tick() {
