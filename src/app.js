@@ -6,12 +6,14 @@ import { saveUserNickname } from "./utils/database";
 import { showView, showInputError } from "./utils/transition";
 
 import { World } from "./game/World";
-import { Stars } from "./game/Stars";
 import { Spaceship } from "./game/spaceship";
 import { LaunchPad } from "./game/LaunchPad";
+import { Earth } from "./game/Earth";
+import { Moon } from "./game/moon";
 import { SpaceStation } from "./game/SpaceStation";
 import { SkyBox } from "./game/SkyBox";
-import { Controls } from "./game/Controls";
+
+import { useHelpers } from "./utils/helper";
 
 class App {
   constructor() {
@@ -51,12 +53,15 @@ class App {
 
     this.updateState(this.STATES.LOADING);
 
-    this.world = new World(this);
-    this.stars = new Stars(this);
-    this.spaceship = new Spaceship(this);
-    this.launchPad = new LaunchPad(this);
+    this.world = new World(this.dom.canvas);
+
+    this.moon = new Moon(this);
+    this.earth = new Earth(this);
     this.skyBox = new SkyBox(this);
+    this.launchPad = new LaunchPad(this);
+    this.spaceship = new Spaceship(this);
     this.spaceStation = new SpaceStation(this);
+    useHelpers(this.world.scene, 1000, 2);
   }
 
   updateState(newState) {
@@ -91,8 +96,6 @@ class App {
     this.loadingManager = new THREE.LoadingManager();
 
     this.loadingManager.onLoad = () => {
-      this.controls = new Controls(this);
-
       gsap.delayedCall(0.5, () => {
         this.updateState(this.STATES.START);
         showView(this.dom.canvas, 1);
@@ -115,6 +118,7 @@ class App {
     this.dom.button.start.addEventListener("click", () => {
       if (this.dom.input.nickname.value) {
         this.updateState(this.STATES.SETTING);
+
         showView(this.dom.gameSetting, 1);
         this.dom.text.inputError.textContent = "";
 
@@ -140,24 +144,16 @@ class App {
       count--;
       this.dom.text.countDown.textContent = count;
 
-      if (count < 3) {
+      if (count < 0) {
         this.dom.text.countDown.textContent = "";
         clearInterval(intervalID);
       }
     }, 1000);
 
     setTimeout(() => {
-      this.spaceShip.launch();
+      this.spaceship.launch();
     }, 6000);
-
-    setTimeout(() => {
-      window.cancelAnimationFrame(this.spaceShip.launchRequestId);
-    }, 30000);
   }
-
-  result() {}
-
-  error() {}
 }
 
 new App();
