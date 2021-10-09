@@ -20,7 +20,7 @@ class SpaceStation {
     });
     this.spaceStation = gltf.scene;
     this.spaceStation.position.set(1000, -400, 0);
-    this.spaceStation.scale.set(4, 4, 4);
+    this.spaceStation.scale.set(3, 3, 3);
 
     this.app.world.scene.add(this.spaceStation);
   }
