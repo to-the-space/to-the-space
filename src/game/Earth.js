@@ -18,8 +18,11 @@ class Earth {
       }
     });
     this.earth = gltf.scene;
-    this.earth.rotation.x = Math.PI * 1.5;
-    this.earth.position.y = -10;
+    this.earth.rotation.set(Math.PI * 1.5, 0, Math.PI * 1.5);
+    this.earth.position.set(0, -10, 0);
+
+    const axesHelper = new THREE.AxesHelper(1000);
+    this.earth.add(axesHelper);
 
     this.app.world.scene.add(this.earth);
   }

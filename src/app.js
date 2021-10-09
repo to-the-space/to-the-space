@@ -6,7 +6,7 @@ import { saveUserNickname } from "./utils/database";
 import { showView, showInputError } from "./utils/transition";
 
 import { World } from "./game/World";
-import { Spaceship } from "./game/spaceship";
+import { Spaceship } from "./game/Spaceship";
 import { LaunchPad } from "./game/LaunchPad";
 import { Earth } from "./game/Earth";
 import { Moon } from "./game/moon";
@@ -61,7 +61,7 @@ class App {
     this.launchPad = new LaunchPad(this);
     this.spaceship = new Spaceship(this);
     this.spaceStation = new SpaceStation(this);
-    useHelpers(this.world.scene, 1000, 2);
+    // useHelpers(this.world.scene, 1000, 2);
   }
 
   updateState(newState) {
@@ -81,7 +81,7 @@ class App {
         this.loading();
         break;
       case this.STATES.START:
-        this.start();
+        this.starting();
         break;
       case this.STATES.SETTING:
         this.setting();
@@ -114,7 +114,7 @@ class App {
     this.loadingManager.onError = () => {};
   }
 
-  start() {
+  starting() {
     this.dom.button.start.addEventListener("click", () => {
       if (this.dom.input.nickname.value) {
         this.updateState(this.STATES.SETTING);
@@ -133,12 +133,13 @@ class App {
 
   setting() {
     this.dom.button.launch.addEventListener("click", () => {
+      this.world.scene.add(this.earth.earth);
       this.updateState(this.STATES.PLAY);
     });
   }
 
   playing() {
-    let count = 5;
+    let count = 10;
 
     const intervalID = setInterval(() => {
       count--;
@@ -152,7 +153,7 @@ class App {
 
     setTimeout(() => {
       this.spaceship.launch();
-    }, 6000);
+    }, 10000);
   }
 }
 

@@ -29,6 +29,7 @@ class World {
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableDamping = true;
     this.controls.enablePan = false;
+    this.controls.maxDistance = 1500;
 
     // light
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
