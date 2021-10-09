@@ -1,38 +1,131 @@
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+import Model from "./Model";
+
 class World {
-  constructor(canvas) {
+  constructor(canvas, loadingManager) {
     this.canvas = canvas;
+    this.loadingManager = loadingManager;
+
+    this.initialize();
+  }
+
+  async initialize() {
+    const gltfLoader = new GLTFLoader(this.loadingManager);
+    const cubeTextureLoader = new THREE.CubeTextureLoader(this.loadingManager);
+
+    const [moon, earth, launchPad, spaceship, spaceStation] = await Promise.all(
+      [
+        gltfLoader.loadAsync("/models/moon/scene.gltf"),
+        gltfLoader.loadAsync("/models/earth/scene.gltf"),
+        gltfLoader.loadAsync("/models/launchPad/scene.gltf"),
+        gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
+        gltfLoader.loadAsync("/models/spaceStation/scene.gltf"),
+      ],
+    );
+
+    const backgroundTexture = await cubeTextureLoader.loadAsync([
+      "/textures/spaceCubeMap/spaceX-.png",
+      "/textures/spaceCubeMap/spaceX+.png",
+      "/textures/spaceCubeMap/spaceY-.png",
+      "/textures/spaceCubeMap/spaceY+.png",
+      "/textures/spaceCubeMap/spaceZ-.png",
+      "/textures/spaceCubeMap/spaceZ+.png",
+    ]);
+
+    const modelStorage = {};
+    modelStorage.moon = moon.scene;
+    modelStorage.earth = earth.scene;
+    modelStorage.launchPad = launchPad.scene;
+    modelStorage.spaceship = spaceship.scene;
+    modelStorage.spaceStation = spaceStation.scene;
+
+    const textureStorage = {};
+    textureStorage.backgroundTexture = backgroundTexture;
+
+    this.start(modelStorage, textureStorage);
+  }
+
+  start(modelStorage, textureStorage) {
+    this.scene = new THREE.Scene();
 
     this.sizes = {
       width: window.innerWidth,
       height: window.innerHeight,
     };
-
     this.clock = new THREE.Clock();
 
-    // scene
-    this.scene = new THREE.Scene();
+    this.addLight();
+    this.addPhysicsWorld();
+    this.addCamera(this.sizes);
+    this.render(this.canvas, this.sizes);
+    this.addControl(this.camera, this.canvas);
 
-    // camera
-    this.camera = new THREE.PerspectiveCamera(
+    this.scene.background = textureStorage.backgroundTexture;
+
+    this.moon = new Model(modelStorage.moon, this.scene);
+    this.earth = new Model(modelStorage.earth, this.scene);
+    this.launchPad = new Model(modelStorage.launchPad, this.scene);
+    this.spaceship = new Model(modelStorage.spaceship, this.scene);
+    this.spaceStation = new Model(modelStorage.spaceStation, this.scene);
+
+    this.moon.setScale(150);
+    this.moon.setPosition(0, -400, -3000);
+    this.moon.receiveShadow();
+    this.moon.addToScene();
+
+    this.earth.setPosition(60, -445, -50);
+    this.earth.receiveShadow();
+    this.earth.addToScene();
+
+    this.launchPad.setScale(9);
+    this.launchPad.setPosition(0, -14, 0);
+    this.launchPad.castShadow();
+    this.launchPad.addToScene();
+
+    this.spaceship.castShadow();
+    this.spaceship.setRotation(-Math.PI * 0.25, -Math.PI * 0.5, 0);
+    this.spaceship.addToScene();
+
+    this.spaceStation.setScale(3);
+    this.spaceStation.setPosition(0, 0, -1000);
+    this.spaceStation.receiveShadow();
+    this.spaceStation.addToScene();
+
+    this.tick();
+
+    this.addAxesHelper(5);
+
+    window.addEventListener("resize", () => this.onWindowResize());
+  }
+
+  addCamera(sizes) {
+    const camera = new THREE.PerspectiveCamera(
       75,
-      this.sizes.width / this.sizes.height,
+      sizes.width / sizes.height,
       0.1,
       250000000,
     );
-    this.camera.position.set(0, 0, 20);
-    this.scene.add(this.camera);
 
-    // control
-    this.controls = new OrbitControls(this.camera, this.canvas);
-    this.controls.enableDamping = true;
-    this.controls.enablePan = false;
-    this.controls.maxDistance = 1500;
+    camera.position.set(0, 0, 30);
+    this.scene.add(camera);
 
-    // light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+    this.camera = camera;
+  }
+
+  addControl(camera, canvas) {
+    const control = new OrbitControls(camera, canvas);
+    control.enableDamping = true;
+    control.enablePan = false;
+    // control.enableZoom = false;
+
+    this.control = control;
+  }
+
+  addLight() {
+    const ambientLight = new THREE.AmbientLight(0xffffff);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
     directionalLight.position.set(30, 100, 100);
@@ -44,31 +137,38 @@ class World {
     directionalLight.shadow.camera.far = 500;
 
     this.scene.add(ambientLight, directionalLight);
+  }
 
-    // render
-    this.renderer = new THREE.WebGLRenderer({
-      canvas: this.canvas,
+  addBackground(background) {
+    this.scene.background = background;
+  }
+
+  render(canvas, sizes) {
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
       alpha: true,
       antialias: true,
     });
-    this.renderer.setSize(this.sizes.width, this.sizes.height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.shadowMap.enabled = true;
 
-    this.tick();
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
 
-    window.addEventListener("resize", () => this.onWindowResize());
+    this.renderer = renderer;
+  }
+
+  addAxesHelper(size) {
+    const axesHelper = new THREE.AxesHelper(size);
+    this.scene.add(axesHelper);
   }
 
   tick() {
-    const elapsedTime = this.clock.getElapsedTime();
-
-    this.controls.update();
-
     this.renderer.render(this.scene, this.camera);
 
     window.requestAnimationFrame(this.tick.bind(this));
   }
+
+  async loadAllModel() {}
 
   onWindowResize() {
     this.sizes.width = window.innerWidth;
@@ -83,4 +183,4 @@ class World {
   }
 }
 
-export { World };
+export default World;

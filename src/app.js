@@ -1,29 +1,20 @@
 import "./styles/style.scss";
-import * as THREE from "three";
 import gsap from "gsap";
+import * as THREE from "three";
+import { autorun } from "mobx";
+
+import UserStore from "./store/userStore";
+import ViewStore from "./store/viewStore";
+
+import { STATE } from "./constants/view";
 
 import { saveUserNickname } from "./utils/database";
 import { showView, showInputError } from "./utils/transition";
 
-import { World } from "./game/World";
-import { Spaceship } from "./game/Spaceship";
-import { LaunchPad } from "./game/LaunchPad";
-import { Earth } from "./game/Earth";
-import { Moon } from "./game/moon";
-import { SpaceStation } from "./game/SpaceStation";
-import { SkyBox } from "./game/SkyBox";
-
-import { useHelpers } from "./utils/helper";
+import World from "./game/World";
 
 class App {
   constructor() {
-    this.STATES = {
-      LOADING: "loading",
-      START: "start",
-      SETTING: "setting",
-      PLAY: "play",
-    };
-
     this.dom = {
       mainContainer: document.getElementById("ui"),
       canvas: document.querySelector("canvas.webgl"),
@@ -51,53 +42,38 @@ class App {
       },
     };
 
-    this.updateState(this.STATES.LOADING);
+    this.view = new ViewStore();
+    this.user = new UserStore();
 
-    this.world = new World(this.dom.canvas);
+    autorun(() => {
+      switch (this.view.currentState) {
+        case STATE.LOADING:
+          this.loading();
+          break;
+        case STATE.START:
+          this.starting();
+          break;
+        case STATE.SETTING:
+          this.setting();
+          break;
+        case STATE.PLAY:
+          this.playing();
+          break;
+      }
+    });
 
-    this.moon = new Moon(this);
-    this.earth = new Earth(this);
-    this.skyBox = new SkyBox(this);
-    this.launchPad = new LaunchPad(this);
-    this.spaceship = new Spaceship(this);
-    this.spaceStation = new SpaceStation(this);
-    // useHelpers(this.world.scene, 1000, 2);
-  }
-
-  updateState(newState) {
-    for (const key in this.STATES) {
-      this.dom.mainContainer.classList.remove(this.STATES[key]);
-    }
-
-    this.dom.mainContainer.classList.add(newState);
-
-    this.state = newState;
-    this.onAction();
-  }
-
-  onAction() {
-    switch (this.state) {
-      case this.STATES.LOADING:
-        this.loading();
-        break;
-      case this.STATES.START:
-        this.starting();
-        break;
-      case this.STATES.SETTING:
-        this.setting();
-        break;
-      case this.STATES.PLAY:
-        this.playing();
-        break;
-    }
+    this.world = new World(this.dom.canvas, this.loadingManager);
   }
 
   loading() {
+    this.view.updateState(STATE.LOADING);
+
     this.loadingManager = new THREE.LoadingManager();
 
     this.loadingManager.onLoad = () => {
       gsap.delayedCall(0.5, () => {
-        this.updateState(this.STATES.START);
+        this.view.updateState(STATE.START);
+
         showView(this.dom.canvas, 1);
         showView(this.dom.gameStart, 1);
       });
@@ -117,7 +93,7 @@ class App {
   starting() {
     this.dom.button.start.addEventListener("click", () => {
       if (this.dom.input.nickname.value) {
-        this.updateState(this.STATES.SETTING);
+        this.view.updateState(STATE.SETTING);
 
         showView(this.dom.gameSetting, 1);
         this.dom.text.inputError.textContent = "";
@@ -133,8 +109,7 @@ class App {
 
   setting() {
     this.dom.button.launch.addEventListener("click", () => {
-      this.world.scene.add(this.earth.earth);
-      this.updateState(this.STATES.PLAY);
+      this.view.updateState(STATE.PLAY);
     });
   }
 
