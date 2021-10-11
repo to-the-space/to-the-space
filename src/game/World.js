@@ -162,6 +162,15 @@ class World {
     this.scene.add(axesHelper);
   }
 
+  addPhysicsWorld() {
+    const world = new CANNON.World();
+    world.broadphase = new CANNON.SAPBroadphase(world);
+    world.allowSleep = true;
+    world.gravity.set(0, -20, 0);
+
+    this.physicsWorld = world;
+  }
+
   tick() {
     this.renderer.render(this.scene, this.camera);
 
