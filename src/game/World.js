@@ -190,9 +190,16 @@ class World {
     if (viewStore.currentState === STATE.LAUNCH) {
       this.physicsWorld.step(1 / 60, deltaTime, 3);
       this.spaceship.update();
+      this.control.enabled = false;
+
+      this.camera.position.x = this.spaceship.model.position.x;
+      this.camera.position.y = this.spaceship.model.position.y;
+      this.camera.position.z = this.spaceship.model.position.z + 500;
+      this.camera.lookAt(this.spaceship.model.position);
+    } else {
+      this.control.update();
     }
 
-    this.control.update();
     this.solarSystem.update(elapsedTime);
 
     this.renderer.render(this.scene, this.camera);
