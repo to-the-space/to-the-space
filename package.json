@@ -40,6 +40,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "cannon-es": "^0.18.0",
     "firebase": "^9.1.1",
     "gsap": "^3.8.0",
     "mobx": "^6.3.3",

@@ -10,114 +10,53 @@
     <canvas class="webgl"></canvas>
 
     <div id="ui">
-      <!-- Loading -->
       <div class="game-loading">
         <span class="loading-percentage">0%</span>
         <div class="loading-bar"></div>
       </div>
 
-      <!-- Game Start -->
       <div class="game-start">
-        <h1 class="game-title">
-          <span>to the</span>
-          <span>space</span>
-        </h1>
+        <h1 class="game-title">to the space</h1>
 
         <input class="nickname-input" type="text" placeholder="ex) Elon Musk" />
         <button class="start-button">START</button>
         <span class="input-error"></span>
       </div>
 
-      <!-- Game Setting -->
       <div class="game-setting">
-        <div class="setting-status">
-          <ul>
-            <li>
-              <span>
-                <i class="fas fa-check-circle"></i>
-              </span>
-              <span></span>
-            </li>
-            <li>
-              <span>
-                <i class="fas fa-check-circle"></i>
-              </span>
-              <span></span>
-            </li>
-            <li>
-              <span>
-                <i class="fas fa-check-circle"></i>
-              </span>
-              <span></span>
-            </li>
-            <li>
-              <span>
-                <i class="fas fa-check-circle"></i>
-              </span>
-              <span></span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="launch-setting">
-          <span>
-            <i class="fas fa-male fa-2x"></i>
-            <input type="range" id="crew" min="1" max="4" value="2" step="1" />
-          </span>
-
-          <span>
-            <i class="fas fa-gas-pump fa-2x" size="5"></i>
-            <input
-              type="range"
-              id="fuel"
-              min="1"
-              max="1000"
-              value="500"
-              step="5"
-            />
-          </span>
+        <div class="game-instruction">
+          <span>Press spacebar to accumulate power for 5 seconds</span>
+          <span>Press AD to move the spaceship</span>
+          <span>Avoid Meteors</span>
+          <span>Get Coins to gain energy</span>
         </div>
 
         <button class="launch-button">LAUNCH</button>
       </div>
 
-      <!-- Game Play -->
       <div class="game-play">
-        <span class="count-down">10</span>
+        <span class="count-down">5</span>
 
-        <div class="gauges">
-          <div class="speed-gauge sc-gauge">
-            <div class="sc-background">
-              <div class="sc-percentage"></div>
-              <div class="sc-mask"></div>
-              <span class="sc-value">100</span>
-            </div>
+        <div class="energy-box">0</div>
+      </div>
+
+      <div class="game-launch">
+        <div class="speed-box">
+          <span>SPEED</span>
+          <div>
+            <span class="speed">0</span>
+            <span>KM/H</span>
           </div>
+        </div>
 
-          <div class="altitude-gauge sc-gauge">
-            <div class="sc-background">
-              <div class="sc-percentage"></div>
-              <div class="sc-mask"></div>
-              <span class="sc-value">100</span>
-            </div>
+        <div class="altitude-box">
+          <span>ALTITUDE</span>
+          <div>
+            <span class="altitude">0</span>
+            <span>KM</span>
           </div>
         </div>
       </div>
-
-      <!-- Game Over -->
-      <div class="game-over">
-        <span></span>
-        <span></span>
-      </div>
-
-      <!-- Error -->
-      <div class="game-error">
-        <span class="error-message"></span>
-      </div>
-    </div>
-    <script
-      src="https://kit.fontawesome.com/1a3fa2ef08.js"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://kit.fontawesome.com/1a3fa2ef08.js" crossorigin="anonymous"></script>
   </body>
 </html>

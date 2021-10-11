@@ -13,9 +13,15 @@ class UserStore {
     });
   }
 
-  addNickname() {}
+  addNickname(nickname) {
+    this.nickname = nickname;
+  }
 
-  addScore() {}
+  addScore(score) {
+    this.score = score;
+  }
 }
 
-export default UserStore;
+const userStore = new UserStore();
+
+export default userStore;

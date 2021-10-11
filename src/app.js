@@ -1,10 +1,12 @@
 import "./styles/style.scss";
+
 import gsap from "gsap";
 import * as THREE from "three";
 import { autorun } from "mobx";
 
-import UserStore from "./store/userStore";
-import ViewStore from "./store/viewStore";
+import playStore from "./store/playStore";
+import userStore from "./store/userStore";
+import viewStore from "./store/viewStore";
 
 import { STATE } from "./constants/view";
 
@@ -22,8 +24,6 @@ class App {
       gameStart: document.querySelector(".game-start"),
       gameSetting: document.querySelector(".game-setting"),
       gamePlay: document.querySelector(".game-play"),
-      gameOver: document.querySelector(".game-over"),
-      gameError: document.querySelector(".game-error"),
       input: {
         nickname: document.querySelector(".nickname-input"),
       },
@@ -37,42 +37,60 @@ class App {
         percentage: document.querySelector(".loading-percentage"),
       },
       text: {
+        speed: document.querySelector(".speed"),
+        altitude: document.querySelector(".altitude"),
+        energy: document.querySelector(".energy-box"),
         countDown: document.querySelector(".count-down"),
         inputError: document.querySelector(".input-error"),
       },
     };
 
-    this.view = new ViewStore();
-    this.user = new UserStore();
-
     autorun(() => {
-      switch (this.view.currentState) {
-        case STATE.LOADING:
+      switch (viewStore.currentState) {
+        case STATE.LOAD:
           this.loading();
           break;
         case STATE.START:
           this.starting();
           break;
-        case STATE.SETTING:
+        case STATE.SET:
           this.setting();
           break;
         case STATE.PLAY:
           this.playing();
           break;
+        case STATE.LAUNCH:
+          this.launching();
+          break;
+        case STATE.END:
+          this.ending();
+          break;
+        case STATE.SCOREBOARD:
+          this.scoreboard();
+          break;
       }
+    });
+
+    autorun(() => {
+      this.dom.text.speed.textContent = playStore.speed;
+      this.dom.text.altitude.textContent = playStore.altitude;
+    });
+
+    autorun(() => {
+      this.dom.text.energy.textContent = playStore.power;
     });
 
     this.world = new World(this.dom.canvas, this.loadingManager);
   }
 
   loading() {
-    this.view.updateState(STATE.LOADING);
+    viewStore.updateState(STATE.LOAD);
 
     this.loadingManager = new THREE.LoadingManager();
 
     this.loadingManager.onLoad = () => {
       gsap.delayedCall(0.5, () => {
-        this.view.updateState(STATE.START);
+        viewStore.updateState(STATE.START);
 
         showView(this.dom.canvas, 1);
         showView(this.dom.gameStart, 1);
@@ -93,7 +111,7 @@ class App {
   starting() {
     this.dom.button.start.addEventListener("click", () => {
       if (this.dom.input.nickname.value) {
-        this.view.updateState(STATE.SETTING);
+        viewStore.updateState(STATE.SET);
 
         showView(this.dom.gameSetting, 1);
         this.dom.text.inputError.textContent = "";
@@ -101,6 +119,8 @@ class App {
         const nickname = this.dom.input.nickname.value;
 
         saveUserNickname(nickname);
+
+        userStore.addNickname(nickname);
       } else {
         showInputError(this.dom.text.inputError);
       }
@@ -109,26 +129,42 @@ class App {
 
   setting() {
     this.dom.button.launch.addEventListener("click", () => {
-      this.view.updateState(STATE.PLAY);
+      viewStore.updateState(STATE.PLAY);
     });
   }
 
   playing() {
-    let count = 10;
+    let count = 5;
+
+    const handleSpaceBarDown = document.addEventListener("keydown", (event) => {
+      event.preventDefault();
+
+      if (event.repeat) return;
+
+      if (event.key === " ") {
+        playStore.addPower();
+      }
+    });
 
     const intervalID = setInterval(() => {
       count--;
       this.dom.text.countDown.textContent = count;
-
       if (count < 0) {
-        this.dom.text.countDown.textContent = "";
+        this.dom.text.countDown.textContent = 5;
         clearInterval(intervalID);
       }
     }, 1000);
 
     setTimeout(() => {
-      this.spaceship.launch();
-    }, 10000);
+      playStore.setIsLaunched(true);
+      viewStore.updateState(STATE.LAUNCH);
+      document.removeEventListener("keydown", handleSpaceBarDown);
+    }, 5000);
+  }
+
+  launching() {
+    this.dom.text.altitude.textContent = playStore.altitude;
+    this.dom.text.speed.textContent = playStore.speed;
   }
 }
 

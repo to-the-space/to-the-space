@@ -1,21 +1,41 @@
 import { makeObservable, observable, action, computed } from "mobx";
 
 class PlayStore {
-  angle;
-  power;
+  isLaunched = false;
+  speed = 0;
+  altitude = 0;
+  power = 0;
 
   constructor() {
     makeObservable(this, {
-      angle: observable,
+      isLaunched: observable,
+      speed: observable,
+      altitude: observable,
       power: observable,
-      changeAngle: action,
-      changeEnginePower: action,
+      changeSpeed: action,
+      changeAltitude: action,
+      addPower: action,
+      setIsLaunched: action,
     });
   }
 
-  changeAngle() {}
+  setIsLaunched(state) {
+    this.isLaunched = state;
+  }
 
-  changeEnginePower() {}
+  changeSpeed(newSpeed) {
+    this.speed = newSpeed;
+  }
+
+  changeAltitude(newAltitude) {
+    this.altitude = newAltitude;
+  }
+
+  addPower() {
+    this.power += 100;
+  }
 }
 
-export default PlayStore;
+const playStore = new PlayStore();
+
+export default playStore;
