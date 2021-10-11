@@ -5,7 +5,7 @@ import { STATE } from "../constants/view";
 const mainContainer = document.getElementById("ui");
 
 class ViewStore {
-  currentState = STATE.LOADING;
+  currentState = STATE.LOAD;
 
   constructor() {
     makeObservable(this, {
@@ -25,4 +25,6 @@ class ViewStore {
   }
 }
 
-export default ViewStore;
+const viewStore = new ViewStore();
+
+export default viewStore;
