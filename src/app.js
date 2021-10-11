@@ -36,10 +36,12 @@ class App {
         bar: document.querySelector(".loading-bar"),
         percentage: document.querySelector(".loading-percentage"),
       },
+      energy: {
+        bar: document.querySelector(".energy-bar"),
+      },
       text: {
         speed: document.querySelector(".speed"),
         altitude: document.querySelector(".altitude"),
-        energy: document.querySelector(".energy-box"),
         countDown: document.querySelector(".count-down"),
         inputError: document.querySelector(".input-error"),
       },
@@ -77,7 +79,7 @@ class App {
     });
 
     autorun(() => {
-      this.dom.text.energy.textContent = playStore.power;
+      this.dom.energy.bar.style.height = `${viewStore.energy}%`;
     });
 
     this.world = new World(this.dom.canvas, this.loadingManager);
@@ -142,6 +144,7 @@ class App {
       if (event.repeat) return;
 
       if (event.key === " ") {
+        viewStore.updateEnergy();
         playStore.addPower();
       }
     });
