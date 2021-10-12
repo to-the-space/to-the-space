@@ -18,6 +18,9 @@ class World {
     this.clock = new THREE.Clock();
     this.oldElapsedTime = 0;
 
+    this.currentPosition = new THREE.Vector3();
+    this.currentLookat = new THREE.Vector3();
+
     this.loadAllModel();
   }
 
@@ -34,13 +37,14 @@ class World {
       "/textures/spaceCubeMap/spaceZ+.png",
     ]);
 
-    const [moon, earth, spaceship, spaceStation, settleLight] = await Promise.all([
-      gltfLoader.loadAsync("/models/moon/scene.gltf"),
-      gltfLoader.loadAsync("/models/earth/scene.gltf"),
-      gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
-      gltfLoader.loadAsync("/models/spaceStation/scene.gltf"),
-      gltfLoader.loadAsync("/models/settleLight/scene.gltf"),
-    ]);
+    const [moon, earth, spaceship, spaceStation, settleLight] =
+      await Promise.all([
+        gltfLoader.loadAsync("/models/moon/scene.gltf"),
+        gltfLoader.loadAsync("/models/earth/scene.gltf"),
+        gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
+        gltfLoader.loadAsync("/models/spaceStation/scene.gltf"),
+        gltfLoader.loadAsync("/models/settleLight/scene.gltf"),
+      ]);
 
     this.modelStorage = {};
     this.modelStorage.moon = moon.scene;
@@ -76,9 +80,21 @@ class World {
     this.solarSystem = new SolarSystem(this.scene);
     this.settleLight = new Model(this.modelStorage.settleLight, this.scene);
     this.spaceStation = new Model(this.modelStorage.spaceStation, this.scene);
-    this.moon = new Model(this.modelStorage.moon, this.scene, this.physicsWorld);
-    this.earth = new Model(this.modelStorage.earth, this.scene, this.physicsWorld);
-    this.spaceship = new Spaceship(this.modelStorage.spaceship, this.scene, this.physicsWorld);
+    this.moon = new Model(
+      this.modelStorage.moon,
+      this.scene,
+      this.physicsWorld,
+    );
+    this.earth = new Model(
+      this.modelStorage.earth,
+      this.scene,
+      this.physicsWorld,
+    );
+    this.spaceship = new Spaceship(
+      this.modelStorage.spaceship,
+      this.scene,
+      this.physicsWorld,
+    );
 
     this.moon.setScale(50);
     this.moon.setPosition(600, 0, 0);
@@ -115,7 +131,12 @@ class World {
   }
 
   addCamera(sizes) {
-    const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 5000);
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      sizes.width / sizes.height,
+      0.1,
+      5000,
+    );
     camera.position.set(0, 0, 500);
 
     this.scene.add(camera);
@@ -188,15 +209,28 @@ class World {
     this.oldElapsedTime = elapsedTime;
 
     if (viewStore.currentState === STATE.LAUNCH) {
-      this.physicsWorld.step(1 / 60, deltaTime, 3);
-      this.spaceship.update();
       this.control.enabled = false;
 
-      this.camera.position.x = this.spaceship.model.position.x;
-      this.camera.position.y = this.spaceship.model.position.y;
-      this.camera.position.z = this.spaceship.model.position.z + 500;
-      this.camera.lookAt(this.spaceship.model.position);
-    } else {
+      this.physicsWorld.step(1 / 60, deltaTime, 3);
+      this.spaceship.update();
+
+      this.goal = new THREE.Vector3(
+        this.spaceship.model.position.x,
+        this.spaceship.model.position.y,
+        this.spaceship.model.position.z + 500,
+      );
+
+      const lerpTime = 1.0 - Math.pow(0.001, elapsedTime);
+
+      this.currentPosition.lerp(this.goal, lerpTime);
+      this.currentLookat.lerp(this.spaceship.model.position, lerpTime);
+
+      this.camera.position.copy(this.currentPosition);
+      this.camera.lookAt(this.currentLookat);
+    }
+
+    if (viewStore.currentState === STATE.END) {
+      this.control.enabled = true;
       this.control.update();
     }
 
