@@ -1,22 +1,37 @@
-import { makeObservable, observable, action, computed } from "mobx";
+import { makeObservable, observable, action } from "mobx";
 
 class PlayStore {
   isLaunched = false;
   speed = 0;
   altitude = 0;
   power = 0;
+  highestAltitude = 0;
 
   constructor() {
     makeObservable(this, {
       isLaunched: observable,
       speed: observable,
       altitude: observable,
+      highestAltitude: observable,
       power: observable,
       changeSpeed: action,
       changeAltitude: action,
       addPower: action,
       setIsLaunched: action,
+      reset: action,
     });
+  }
+
+  reset() {
+    this.isLaunched = false;
+    this.speed = 0;
+    this.altitude = 0;
+    this.power = 0;
+    this.highestAltitude = 0;
+  }
+
+  setHighestAltitude(newAltitude) {
+    this.highestAltitude = Math.max(this.highestAltitude, newAltitude);
   }
 
   setIsLaunched(state) {
@@ -32,7 +47,7 @@ class PlayStore {
   }
 
   addPower() {
-    this.power += 300;
+    this.power += 1000;
   }
 }
 
