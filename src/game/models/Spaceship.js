@@ -28,24 +28,16 @@ class Spaceship extends Model {
       return;
     }
     if (this.input.keys.left) {
-      this.boxBody.position.x -= 0.4;
-      // this.boxBody.quaternion.y -= 0.01;
+      this.boxBody.position.x -= 1;
     }
     if (this.input.keys.right) {
-      this.boxBody.position.x += 0.4;
-      // this.boxBody.quaternion.y += 0.01;
+      this.boxBody.position.x += 1;
     }
   }
 
   launch() {
     const power = playStore.power;
-
-    this.boxBody.applyForce(
-      new CANNON.Vec3(0, power, 0),
-      this.boxBody.position,
-    );
-
-    this.boxBody.addEventListener("collide", () => {});
+    this.boxBody.applyForce(new CANNON.Vec3(0, power, 0), this.boxBody.position);
   }
 
   update() {

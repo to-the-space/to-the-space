@@ -11,6 +11,8 @@ import Model from "./models/Model";
 import Spaceship from "./models/Spaceship";
 import SolarSystem from "./SolarSystem";
 
+import CoinHolder from "./particles/coin/CoinHolder";
+
 class World {
   constructor(canvas, loadingManager) {
     this.canvas = canvas;
@@ -37,14 +39,13 @@ class World {
       "/textures/spaceCubeMap/spaceZ+.png",
     ]);
 
-    const [moon, earth, spaceship, spaceStation, settleLight] =
-      await Promise.all([
-        gltfLoader.loadAsync("/models/moon/scene.gltf"),
-        gltfLoader.loadAsync("/models/earth/scene.gltf"),
-        gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
-        gltfLoader.loadAsync("/models/spaceStation/scene.gltf"),
-        gltfLoader.loadAsync("/models/settleLight/scene.gltf"),
-      ]);
+    const [moon, earth, spaceship, spaceStation, settleLight] = await Promise.all([
+      gltfLoader.loadAsync("/models/moon/scene.gltf"),
+      gltfLoader.loadAsync("/models/earth/scene.gltf"),
+      gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
+      gltfLoader.loadAsync("/models/spaceStation/scene.gltf"),
+      gltfLoader.loadAsync("/models/settleLight/scene.gltf"),
+    ]);
 
     this.modelStorage = {};
     this.modelStorage.moon = moon.scene;
@@ -80,21 +81,9 @@ class World {
     this.solarSystem = new SolarSystem(this.scene);
     this.settleLight = new Model(this.modelStorage.settleLight, this.scene);
     this.spaceStation = new Model(this.modelStorage.spaceStation, this.scene);
-    this.moon = new Model(
-      this.modelStorage.moon,
-      this.scene,
-      this.physicsWorld,
-    );
-    this.earth = new Model(
-      this.modelStorage.earth,
-      this.scene,
-      this.physicsWorld,
-    );
-    this.spaceship = new Spaceship(
-      this.modelStorage.spaceship,
-      this.scene,
-      this.physicsWorld,
-    );
+    this.moon = new Model(this.modelStorage.moon, this.scene, this.physicsWorld);
+    this.earth = new Model(this.modelStorage.earth, this.scene, this.physicsWorld);
+    this.spaceship = new Spaceship(this.modelStorage.spaceship, this.scene, this.physicsWorld);
 
     this.moon.setScale(50);
     this.moon.setPosition(600, 0, 0);
@@ -123,20 +112,15 @@ class World {
     this.settleLight.setRotation(0, Math.PI * 0.25);
     this.settleLight.addToScene();
 
-    this.tick();
+    this.createCoin();
 
-    this.addAxesHelper(5);
+    this.tick();
 
     window.addEventListener("resize", () => this.onWindowResize());
   }
 
   addCamera(sizes) {
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      sizes.width / sizes.height,
-      0.1,
-      5000,
-    );
+    const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 20000);
     camera.position.set(0, 0, 500);
 
     this.scene.add(camera);
@@ -147,13 +131,14 @@ class World {
     const control = new OrbitControls(camera, canvas);
     control.enableDamping = true;
     control.enablePan = false;
+    control.maxDistance = 1500;
 
     this.control = control;
   }
 
   removeControl() {
-    this.control.enable = false;
     this.control.reset();
+    this.control.enable = false;
   }
 
   addLight() {
@@ -203,6 +188,11 @@ class World {
     this.physicsWorld = world;
   }
 
+  createCoin() {
+    this.coinHolder = new CoinHolder(20);
+    this.scene.add(this.coinHolder.mesh);
+  }
+
   tick() {
     const elapsedTime = this.clock.getElapsedTime();
     const deltaTime = elapsedTime - this.oldElapsedTime;
@@ -227,6 +217,9 @@ class World {
 
       this.camera.position.copy(this.currentPosition);
       this.camera.lookAt(this.currentLookat);
+
+      this.coinHolder.spawnCoin(this.spaceship.model);
+      this.coinHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);
     }
 
     if (viewStore.currentState === STATE.END) {
