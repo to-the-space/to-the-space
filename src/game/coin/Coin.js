@@ -12,8 +12,6 @@ class Coin {
 
     this.mesh = new THREE.Mesh(geometry, material);
     this.mesh.castShadow = true;
-    this.angle = 0;
-    this.distance = 0;
   }
 }
 

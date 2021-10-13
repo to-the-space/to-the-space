@@ -21,10 +21,7 @@ class CoinHolder {
 
     if (this.counter % 50 !== 0) return;
 
-    const coinNumber = 10;
-
-    const distance = 600 + 100 + (-1 + Math.random() * 2) * 60;
-    const amplitude = 10 + Math.round(Math.random() * 10);
+    const coinNumber = 3;
 
     for (let i = 0; i < coinNumber; i++) {
       let coin;
@@ -38,11 +35,14 @@ class CoinHolder {
       this.mesh.add(coin.mesh);
       this.coinInUse.push(coin);
 
-      coin.angle = -(i * 0.02);
-      coin.distance = distance + Math.cos(i * 0.5) * amplitude;
+      const fromX = window.innerWidth * 0.5;
+      const toX = window.innerWidth;
 
-      coin.mesh.position.y = spaceship.position.y + 1000 + Math.floor(Math.random() * 40);
-      coin.mesh.position.x = -1000 + Math.floor(Math.random() * 2000);
+      const fromY = window.innerWidth;
+      const toY = window.innerWidth * 0.5;
+
+      coin.mesh.position.y = spaceship.position.y + fromY + Math.floor(Math.random() * toY);
+      coin.mesh.position.x = -fromX + Math.floor(Math.random() * toX);
     }
   }
 
@@ -50,15 +50,7 @@ class CoinHolder {
     for (let i = 0; i < this.coinInUse.length; i++) {
       const coin = this.coinInUse[i];
 
-      if (coin.exploding) continue;
-
-      coin.angle += deltaTime * 0.25;
-
-      if (coin.angle > Math.PI * 2) {
-        coin.angle -= Math.PI * 20;
-      }
-
-      coin.mesh.position.x += Math.cos(deltaTime);
+      coin.mesh.position.x += Math.sin(deltaTime);
       coin.mesh.position.z = 10;
 
       coin.mesh.rotation.z += Math.random() * 0.1;
@@ -66,6 +58,7 @@ class CoinHolder {
 
       const differentPosition = spaceship.position.clone().sub(coin.mesh.position.clone());
       const distance = differentPosition.length();
+      const maxDistance = spaceship.position.y - 300;
 
       if (distance < 50) {
         this.coinPool.unshift(this.coinInUse.splice(i, 1)[0]);
@@ -74,7 +67,7 @@ class CoinHolder {
         physicsSpaceship.velocity.y += 20;
 
         i--;
-      } else if (coin.angle > Math.PI) {
+      } else if (coin.mesh.position.y < maxDistance) {
         this.coinPool.unshift(this.coinInUse.splice(i, 1)[0]);
         this.mesh.remove(coin.mesh);
 
