@@ -47,7 +47,7 @@ class PlayStore {
   }
 
   addPower() {
-    this.power += 1000;
+    this.power += 1500;
   }
 }
 

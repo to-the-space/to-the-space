@@ -27,10 +27,10 @@ class Spaceship extends Model {
     const max = window.innerWidth * 0.5 - 100;
 
     if (this.input.keys.left && this.model.position.x > -max) {
-      this.boxBody.position.x -= 1;
+      this.boxBody.position.x -= 2;
     }
     if (this.input.keys.right && this.model.position.x < max) {
-      this.boxBody.position.x += 1;
+      this.boxBody.position.x += 2;
     }
   }
 
