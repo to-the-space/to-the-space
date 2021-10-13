@@ -24,13 +24,12 @@ class Spaceship extends Model {
   }
 
   enableControl() {
-    if (this.model.position.x < -500 || this.model.position.x > 500) {
-      return;
-    }
-    if (this.input.keys.left) {
+    const max = window.innerWidth * 0.5 - 100;
+
+    if (this.input.keys.left && this.model.position.x > -max) {
       this.boxBody.position.x -= 1;
     }
-    if (this.input.keys.right) {
+    if (this.input.keys.right && this.model.position.x < max) {
       this.boxBody.position.x += 1;
     }
   }
