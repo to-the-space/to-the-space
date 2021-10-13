@@ -1,9 +1,12 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
+import gsap from "gsap";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import { STATE } from "../constants/view";
+
+import { autorun } from "mobx";
 import viewStore from "../store/viewStore";
 import playStore from "../store/playStore";
 
@@ -22,6 +25,26 @@ class World {
 
     this.currentPosition = new THREE.Vector3();
     this.currentLookat = new THREE.Vector3();
+
+    autorun(() => {
+      if (viewStore.currentState === STATE.SET) {
+        this.control.enabled = false;
+        this.control.reset();
+        this.control.update();
+
+        gsap.to(this.camera.position, {
+          duration: 1,
+          x: 0,
+          y: 0,
+          z: 500,
+        });
+      }
+
+      if (viewStore.currentState === STATE.END) {
+        this.control.enabled = true;
+        this.control.update();
+      }
+    });
 
     this.loadAllModel();
   }
@@ -67,8 +90,6 @@ class World {
       width: window.innerWidth,
       height: window.innerHeight,
     };
-
-    this.clock = new THREE.Clock();
 
     this.addLight();
     this.addPhysicsWorld();
@@ -121,7 +142,7 @@ class World {
 
   addCamera(sizes) {
     const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 20000);
-    camera.position.set(0, 0, 500);
+    camera.position.set(0, 0, 1500);
 
     this.scene.add(camera);
     this.camera = camera;
@@ -134,11 +155,6 @@ class World {
     control.maxDistance = 1500;
 
     this.control = control;
-  }
-
-  removeControl() {
-    this.control.reset();
-    this.control.enable = false;
   }
 
   addLight() {
@@ -199,35 +215,16 @@ class World {
     this.oldElapsedTime = elapsedTime;
 
     if (viewStore.currentState === STATE.LAUNCH) {
-      this.control.enabled = false;
-
       this.physicsWorld.step(1 / 60, deltaTime, 3);
       this.spaceship.update();
 
-      this.goal = new THREE.Vector3(
-        this.spaceship.model.position.x,
-        this.spaceship.model.position.y,
-        this.spaceship.model.position.z + 500,
-      );
-
-      const lerpTime = 1.0 - Math.pow(0.001, elapsedTime);
-
-      this.currentPosition.lerp(this.goal, lerpTime);
-      this.currentLookat.lerp(this.spaceship.model.position, lerpTime);
-
-      this.camera.position.copy(this.currentPosition);
-      this.camera.lookAt(this.currentLookat);
+      this.camera.position.y = this.spaceship.model.position.y;
 
       this.coinHolder.spawnCoin(this.spaceship.model);
       this.coinHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);
+    } else {
+      this.solarSystem.update(elapsedTime);
     }
-
-    if (viewStore.currentState === STATE.END) {
-      this.control.enabled = true;
-      this.control.update();
-    }
-
-    this.solarSystem.update(elapsedTime);
 
     this.renderer.render(this.scene, this.camera);
     window.requestAnimationFrame(this.tick.bind(this));
