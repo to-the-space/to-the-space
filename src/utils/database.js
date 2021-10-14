@@ -1,20 +1,45 @@
-import "../../config/firebase";
-import { getDatabase, ref, set } from "firebase/database";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, get, push, query } from "firebase/database";
 
-const db = getDatabase();
-
-const saveUserNickname = (nickname) => {
-  set(ref(db, "scoreboard/" + nickname), {
-    nickname,
-  });
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
 };
 
-const saveUserScore = (score, nickname) => {
-  set(ref(db, "scoreboard/" + nickname), {
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const scoreBoardRef = ref(db, "scoreboard");
+
+const postUserScore = (nickname, score) => {
+  const newPostRef = push(scoreBoardRef);
+  set(newPostRef, {
+    nickname,
     score,
   });
 };
 
-const getScoreBoard = () => {};
+const getScoreList = async () => {
+  const snapshot = await get(query(scoreBoardRef));
 
-export { saveUserNickname, saveUserScore, getScoreBoard };
+  const scoreBoard = Object.values(snapshot.val());
+  scoreBoard.sort((a, b) => b.score - a.score);
+
+  console.log(scoreBoard);
+  console.log(scoreBoard.slice(0, 10));
+  return scoreBoard.slice(0, 10);
+};
+
+const validateNickname = async (nickname) => {
+  const snapshot = await get(query(scoreBoardRef));
+
+  const scoreBoard = Object.values(snapshot.val());
+  const hasNickname = scoreBoard.some((userInfo) => {
+    return userInfo.nickname === nickname;
+  });
+
+  return hasNickname;
+};
+
+export { postUserScore, getScoreList, validateNickname };
