@@ -10,7 +10,7 @@ import viewStore from "./store/viewStore";
 
 import { STATE } from "./constants/view";
 
-import { saveUserNickname } from "./utils/database";
+import { postUserScore, getScoreList, validateNickname } from "./utils/database";
 import { showView, showInputError } from "./utils/transition";
 
 import World from "./game/World";
@@ -111,21 +111,26 @@ class App {
   }
 
   starting() {
-    this.dom.button.start.addEventListener("click", () => {
-      if (this.dom.input.nickname.value) {
+    this.dom.button.start.addEventListener("click", async () => {
+      const userInput = this.dom.input.nickname.value;
+      const hasNickname = await validateNickname(userInput);
+
+      if (!userInput) {
+        showInputError(this.dom.text.inputError, "please input your nickname");
+        return;
+      }
+
+      if (hasNickname) {
+        showInputError(this.dom.text.inputError, "nickname already exist, please choose another nickname");
+        return;
+      }
+
         viewStore.updateState(STATE.SET);
 
         showView(this.dom.gameSetting, 1);
         this.dom.text.inputError.textContent = "";
 
-        const nickname = this.dom.input.nickname.value;
-
-        saveUserNickname(nickname);
-
-        userStore.addNickname(nickname);
-      } else {
-        showInputError(this.dom.text.inputError);
-      }
+      userStore.addNickname(userInput);
     });
   }
 
@@ -168,6 +173,24 @@ class App {
   launching() {
     this.dom.text.altitude.textContent = playStore.altitude;
     this.dom.text.speed.textContent = playStore.speed;
+  }
+
+  async ending() {
+    this.dom.text.userScore.textContent = playStore.highestAltitude;
+
+    userStore.addScore(playStore.highestAltitude);
+
+    const nickname = userStore.nickname;
+    const score = userStore.score;
+
+    postUserScore(nickname, score);
+    await getScoreList();
+
+    this.dom.button.restart.addEventListener("click", () => {
+      viewStore.reset();
+      playStore.reset();
+      viewStore.updateState(STATE.SET);
+    });
   }
 }
 
