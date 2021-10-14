@@ -24,6 +24,8 @@ class App {
       gameStart: document.querySelector(".game-start"),
       gameSetting: document.querySelector(".game-setting"),
       gamePlay: document.querySelector(".game-play"),
+      gameOver: document.querySelector("game-end"),
+      scoreboard: document.querySelector(".scoreboard"),
       input: {
         nickname: document.querySelector(".nickname-input"),
       },
@@ -44,6 +46,7 @@ class App {
         altitude: document.querySelector(".altitude"),
         countDown: document.querySelector(".count-down"),
         inputError: document.querySelector(".input-error"),
+        userScore: document.querySelector(".user-score"),
       },
     };
 
@@ -66,9 +69,6 @@ class App {
           break;
         case STATE.END:
           this.ending();
-          break;
-        case STATE.SCOREBOARD:
-          this.scoreboard();
           break;
       }
     });
@@ -107,7 +107,7 @@ class App {
       this.dom.loading.percentage.textContent = `${percentage}%`;
     };
 
-    this.loadingManager.onError = () => {};
+    this.loadingManager.onError = (error) => {};
   }
 
   starting() {
@@ -125,10 +125,10 @@ class App {
         return;
       }
 
-        viewStore.updateState(STATE.SET);
+      viewStore.updateState(STATE.SET);
 
-        showView(this.dom.gameSetting, 1);
-        this.dom.text.inputError.textContent = "";
+      showView(this.dom.gameSetting, 1);
+      this.dom.text.inputError.textContent = "";
 
       userStore.addNickname(userInput);
     });
@@ -184,9 +184,32 @@ class App {
     const score = userStore.score;
 
     postUserScore(nickname, score);
-    await getScoreList();
+
+    const scoreList = await getScoreList();
+
+    const fragment = document.createDocumentFragment();
+
+    scoreList.map((info, index) => {
+      const scoreElement = document.createElement("li");
+      scoreElement.classList.add("score-element");
+
+      const nickname = document.createElement("span");
+      nickname.textContent = `${index + 1}.  ${info.nickname}`;
+      nickname.classList.add("nickname");
+      scoreElement.append(nickname);
+
+      const score = document.createElement("span");
+      score.textContent = `${info.score} KM`;
+      score.classList.add("score");
+      scoreElement.append(score);
+
+      fragment.append(scoreElement);
+    });
+
+    this.dom.scoreboard.append(fragment);
 
     this.dom.button.restart.addEventListener("click", () => {
+      this.dom.scoreboard.innerHTML = "";
       viewStore.reset();
       playStore.reset();
       viewStore.updateState(STATE.SET);

@@ -5,7 +5,6 @@ const STATE = {
   PLAY: "play",
   LAUNCH: "launch",
   END: "end",
-  SCOREBOARD: "scoreboard",
 };
 
 export { STATE };
