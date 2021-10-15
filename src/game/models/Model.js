@@ -52,31 +52,6 @@ class Model {
     this.physicsWorld.addBody(this.boxBody);
   }
 
-  createPhysicsSphere(radius) {
-    const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
-    const sphereMaterial = new THREE.MeshStandardMaterial({
-      metalness: 0.3,
-      roughness: 0.4,
-    });
-
-    const mesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    mesh.castShadow = true;
-    mesh.scale.set(radius, radius, radius);
-    mesh.position.y = -400;
-    this.scene.add(mesh);
-
-    const sphereShape = new CANNON.Sphere(radius);
-
-    this.sphereBody = new CANNON.Body({
-      position: new CANNON.Vec3(0, 0, 0),
-      shape: sphereShape,
-      material: this.defaultMaterial,
-    });
-
-    this.sphereBody.position.y = -400;
-    this.physicsWorld.addBody(this.sphereBody);
-  }
-
   addToScene() {
     this.scene.add(this.model);
   }
