@@ -130,19 +130,6 @@ li {
     opacity: 0;
     visibility: hidden;
 
-    .launch-button {
-      height: 40px;
-      width: 200px;
-      border: 1px solid #0070f3;
-      background-color: transparent;
-      border-radius: 6px;
-    }
-
-    .launch-button:hover {
-      background-color: #0070f3;
-      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
-    }
-
     .game-instruction {
       text-align: center;
       margin-top: 20px;
@@ -211,7 +198,7 @@ li {
     justify-content: center;
     align-items: center;
     opacity: 0;
-    top: 10%;
+    top: 8%;
     left: 50%;
     transform: translateX(-50%);
 
@@ -225,7 +212,7 @@ li {
       display: flex;
       flex-direction: column;
       width: 300px;
-      height: 300px;
+      height: 330px;
       margin-top: 20px;
       padding: 20px;
       border: 1px solid #0070f3;
@@ -247,6 +234,14 @@ li {
 
     .restart-button {
       margin-top: 20px;
+      background-color: #000;
+      opacity: 0.5;
+    }
+
+    .button:hover {
+      background-color: #0070f3;
+      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+      opacity: 1;
     }
   }
 

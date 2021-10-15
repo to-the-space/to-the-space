@@ -1,4 +1,4 @@
-import "./styles/style.scss";
+import "./styles/style";
 
 import gsap from "gsap";
 import * as THREE from "three";
@@ -112,10 +112,10 @@ class App {
 
   starting() {
     this.dom.button.start.addEventListener("click", async () => {
-      const userInput = this.dom.input.nickname.value;
-      const hasNickname = await validateNickname(userInput);
+      const nicknameInput = this.dom.input.nickname.value;
+      const hasNickname = await validateNickname(nicknameInput);
 
-      if (!userInput) {
+      if (!nicknameInput) {
         showInputError(this.dom.text.inputError, "please input your nickname");
         return;
       }
@@ -125,12 +125,11 @@ class App {
         return;
       }
 
-      viewStore.updateState(STATE.SET);
-
       showView(this.dom.gameSetting, 1);
       this.dom.text.inputError.textContent = "";
 
-      userStore.addNickname(userInput);
+      userStore.addNickname(nicknameInput);
+      viewStore.updateState(STATE.SET);
     });
   }
 
@@ -156,7 +155,9 @@ class App {
 
     const intervalID = setInterval(() => {
       count--;
+
       this.dom.text.countDown.textContent = count;
+
       if (count < 0) {
         this.dom.text.countDown.textContent = 5;
         clearInterval(intervalID);
@@ -209,9 +210,12 @@ class App {
     this.dom.scoreboard.append(fragment);
 
     this.dom.button.restart.addEventListener("click", () => {
-      this.dom.scoreboard.innerHTML = "";
+      while (this.dom.scoreboard.childElementCount > 1) {
+        this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
+      }
       viewStore.reset();
       playStore.reset();
+
       viewStore.updateState(STATE.SET);
     });
   }
