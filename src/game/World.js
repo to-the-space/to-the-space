@@ -8,13 +8,13 @@ import { STATE } from "../constants/view";
 
 import { autorun } from "mobx";
 import viewStore from "../store/viewStore";
-import playStore from "../store/playStore";
 
 import Model from "./models/Model";
 import Spaceship from "./models/Spaceship";
 import SolarSystem from "./SolarSystem";
 
-import CoinHolder from "./particles/coin/CoinHolder";
+import MeteorHolder from "./meteor/MeteorHolder";
+import CoinHolder from "./coin/CoinHolder";
 
 class World {
   constructor(canvas, loadingManager) {
@@ -41,6 +41,7 @@ class World {
       }
 
       if (viewStore.currentState === STATE.END) {
+        this.camera.position.set(0, 0, 1500);
         this.control.enabled = true;
         this.control.update();
       }
@@ -53,21 +54,20 @@ class World {
     const gltfLoader = new GLTFLoader(this.loadingManager);
     const cubeTextureLoader = new THREE.CubeTextureLoader(this.loadingManager);
 
-    const backgroundTexture = await cubeTextureLoader.loadAsync([
-      "/textures/spaceCubeMap/spaceX-.png",
-      "/textures/spaceCubeMap/spaceX+.png",
-      "/textures/spaceCubeMap/spaceY-.png",
-      "/textures/spaceCubeMap/spaceY+.png",
-      "/textures/spaceCubeMap/spaceZ-.png",
-      "/textures/spaceCubeMap/spaceZ+.png",
-    ]);
-
-    const [moon, earth, spaceship, spaceStation, settleLight] = await Promise.all([
+    const [moon, earth, spaceship, spaceStation, settleLight, backgroundTexture] = await Promise.all([
       gltfLoader.loadAsync("/models/moon/scene.gltf"),
       gltfLoader.loadAsync("/models/earth/scene.gltf"),
       gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
       gltfLoader.loadAsync("/models/spaceStation/scene.gltf"),
       gltfLoader.loadAsync("/models/settleLight/scene.gltf"),
+      cubeTextureLoader.loadAsync([
+        "/textures/spaceCubeMap/spaceX-.png",
+        "/textures/spaceCubeMap/spaceX+.png",
+        "/textures/spaceCubeMap/spaceY-.png",
+        "/textures/spaceCubeMap/spaceY+.png",
+        "/textures/spaceCubeMap/spaceZ-.png",
+        "/textures/spaceCubeMap/spaceZ+.png",
+      ]),
     ]);
 
     this.modelStorage = {};
@@ -123,8 +123,8 @@ class World {
     this.spaceship.addToScene();
 
     this.spaceStation.setScale(5);
-    this.spaceStation.setRotation(0, -Math.PI * 0.25);
     this.spaceStation.setPosition(250, 70, 0);
+    this.spaceStation.setRotation(0, -Math.PI * 0.25);
     this.spaceStation.receiveShadow();
     this.spaceStation.addToScene();
 
@@ -134,6 +134,7 @@ class World {
     this.settleLight.addToScene();
 
     this.createCoin();
+    this.createMeteor();
 
     this.tick();
 
@@ -205,8 +206,13 @@ class World {
   }
 
   createCoin() {
-    this.coinHolder = new CoinHolder(20);
+    this.coinHolder = new CoinHolder(15);
     this.scene.add(this.coinHolder.mesh);
+  }
+
+  createMeteor() {
+    this.meteorHolder = new MeteorHolder(5);
+    this.scene.add(this.meteorHolder.mesh);
   }
 
   tick() {
@@ -218,9 +224,12 @@ class World {
       this.physicsWorld.step(1 / 60, deltaTime, 3);
       this.spaceship.update();
 
-      this.camera.position.y = this.spaceship.model.position.y;
+      gsap.to(this.camera.position, { y: this.spaceship.model.position.y + 200, ease: "none" });
 
-      this.coinHolder.spawnCoin(this.spaceship.model);
+      this.meteorHolder.spawn(this.spaceship.model);
+      this.meteorHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);
+
+      this.coinHolder.spawn(this.spaceship.model);
       this.coinHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);
     } else {
       this.solarSystem.update(elapsedTime);

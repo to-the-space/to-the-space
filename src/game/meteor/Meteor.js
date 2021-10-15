@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-class Coin {
+class Meteor {
   constructor() {
-    const geometry = new THREE.TetrahedronGeometry(8, 2);
+    const geometry = new THREE.TetrahedronGeometry(20, 8);
     const material = new THREE.MeshPhongMaterial({
-      color: 0xffd700,
+      color: 0x808080,
       shininess: 0,
       specular: 0xffffff,
       flatShading: true,
@@ -15,4 +15,4 @@ class Coin {
   }
 }
 
-export default Coin;
+export default Meteor;
