@@ -1,21 +1,18 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import gsap from "gsap";
+import { autorun } from "mobx";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-import { STATE } from "../constants/view";
-
-import { autorun } from "mobx";
-import viewStore from "../store/viewStore";
-
 import Model from "./models/Model";
-import Spaceship from "./models/Spaceship";
 import SolarSystem from "./SolarSystem";
-
-import MeteorHolder from "./meteor/MeteorHolder";
+import Spaceship from "./models/Spaceship";
 import CoinHolder from "./coin/CoinHolder";
+import MeteorHolder from "./meteor/MeteorHolder";
 
+import { STATE } from "../constants/view";
+import viewStore from "../store/viewStore";
 class World {
   constructor(canvas, loadingManager) {
     this.canvas = canvas;
@@ -54,12 +51,10 @@ class World {
     const gltfLoader = new GLTFLoader(this.loadingManager);
     const cubeTextureLoader = new THREE.CubeTextureLoader(this.loadingManager);
 
-    const [moon, earth, spaceship, spaceStation, settleLight, backgroundTexture] = await Promise.all([
+    const [moon, earth, spaceship, backgroundTexture] = await Promise.all([
       gltfLoader.loadAsync("/models/moon/scene.gltf"),
       gltfLoader.loadAsync("/models/earth/scene.gltf"),
       gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
-      gltfLoader.loadAsync("/models/spaceStation/scene.gltf"),
-      gltfLoader.loadAsync("/models/settleLight/scene.gltf"),
       cubeTextureLoader.loadAsync([
         "/textures/spaceCubeMap/spaceX-.png",
         "/textures/spaceCubeMap/spaceX+.png",
@@ -74,8 +69,6 @@ class World {
     this.modelStorage.moon = moon.scene;
     this.modelStorage.earth = earth.scene;
     this.modelStorage.spaceship = spaceship.scene;
-    this.modelStorage.spaceStation = spaceStation.scene;
-    this.modelStorage.settleLight = settleLight.scene;
 
     this.textureStorage = {};
     this.textureStorage.background = backgroundTexture;
@@ -100,10 +93,8 @@ class World {
     this.scene.background = this.textureStorage.background;
 
     this.solarSystem = new SolarSystem(this.scene);
-    this.settleLight = new Model(this.modelStorage.settleLight, this.scene);
-    this.spaceStation = new Model(this.modelStorage.spaceStation, this.scene);
-    this.moon = new Model(this.modelStorage.moon, this.scene, this.physicsWorld);
-    this.earth = new Model(this.modelStorage.earth, this.scene, this.physicsWorld);
+    this.moon = new Model(this.modelStorage.moon, this.scene);
+    this.earth = new Model(this.modelStorage.earth, this.scene);
     this.spaceship = new Spaceship(this.modelStorage.spaceship, this.scene, this.physicsWorld);
 
     this.moon.setScale(50);
@@ -121,17 +112,6 @@ class World {
     this.spaceship.createPhysicsBox(30, 130, 50);
     this.spaceship.castShadow();
     this.spaceship.addToScene();
-
-    this.spaceStation.setScale(5);
-    this.spaceStation.setPosition(250, 70, 0);
-    this.spaceStation.setRotation(0, -Math.PI * 0.25);
-    this.spaceStation.receiveShadow();
-    this.spaceStation.addToScene();
-
-    this.settleLight.setScale(0.05);
-    this.settleLight.setPosition(-270, -30, 20);
-    this.settleLight.setRotation(0, Math.PI * 0.25);
-    this.settleLight.addToScene();
 
     this.createCoin();
     this.createMeteor();
@@ -224,7 +204,7 @@ class World {
       this.physicsWorld.step(1 / 60, deltaTime, 3);
       this.spaceship.update();
 
-      gsap.to(this.camera.position, { y: this.spaceship.model.position.y + 200, ease: "none" });
+      this.camera.position.y = this.spaceship.model.position.y;
 
       this.meteorHolder.spawn(this.spaceship.model);
       this.meteorHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);
