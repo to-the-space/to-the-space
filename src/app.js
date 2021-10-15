@@ -1,4 +1,4 @@
-import "./styles/style.scss";
+import "./styles/style";
 
 import gsap from "gsap";
 import * as THREE from "three";
@@ -24,6 +24,8 @@ class App {
       gameStart: document.querySelector(".game-start"),
       gameSetting: document.querySelector(".game-setting"),
       gamePlay: document.querySelector(".game-play"),
+      gameOver: document.querySelector("game-end"),
+      scoreboard: document.querySelector(".scoreboard"),
       input: {
         nickname: document.querySelector(".nickname-input"),
       },
@@ -44,6 +46,7 @@ class App {
         altitude: document.querySelector(".altitude"),
         countDown: document.querySelector(".count-down"),
         inputError: document.querySelector(".input-error"),
+        userScore: document.querySelector(".user-score"),
       },
     };
 
@@ -66,9 +69,6 @@ class App {
           break;
         case STATE.END:
           this.ending();
-          break;
-        case STATE.SCOREBOARD:
-          this.scoreboard();
           break;
       }
     });
@@ -107,15 +107,15 @@ class App {
       this.dom.loading.percentage.textContent = `${percentage}%`;
     };
 
-    this.loadingManager.onError = () => {};
+    this.loadingManager.onError = (error) => {};
   }
 
   starting() {
     this.dom.button.start.addEventListener("click", async () => {
-      const userInput = this.dom.input.nickname.value;
-      const hasNickname = await validateNickname(userInput);
+      const nicknameInput = this.dom.input.nickname.value;
+      const hasNickname = await validateNickname(nicknameInput);
 
-      if (!userInput) {
+      if (!nicknameInput) {
         showInputError(this.dom.text.inputError, "please input your nickname");
         return;
       }
@@ -125,12 +125,11 @@ class App {
         return;
       }
 
-        viewStore.updateState(STATE.SET);
+      showView(this.dom.gameSetting, 1);
+      this.dom.text.inputError.textContent = "";
 
-        showView(this.dom.gameSetting, 1);
-        this.dom.text.inputError.textContent = "";
-
-      userStore.addNickname(userInput);
+      userStore.addNickname(nicknameInput);
+      viewStore.updateState(STATE.SET);
     });
   }
 
@@ -156,7 +155,9 @@ class App {
 
     const intervalID = setInterval(() => {
       count--;
+
       this.dom.text.countDown.textContent = count;
+
       if (count < 0) {
         this.dom.text.countDown.textContent = 5;
         clearInterval(intervalID);
@@ -184,11 +185,37 @@ class App {
     const score = userStore.score;
 
     postUserScore(nickname, score);
-    await getScoreList();
+
+    const scoreList = await getScoreList();
+
+    const fragment = document.createDocumentFragment();
+
+    scoreList.map((info, index) => {
+      const scoreElement = document.createElement("li");
+      scoreElement.classList.add("score-element");
+
+      const nickname = document.createElement("span");
+      nickname.textContent = `${index + 1}.  ${info.nickname}`;
+      nickname.classList.add("nickname");
+      scoreElement.append(nickname);
+
+      const score = document.createElement("span");
+      score.textContent = `${info.score} KM`;
+      score.classList.add("score");
+      scoreElement.append(score);
+
+      fragment.append(scoreElement);
+    });
+
+    this.dom.scoreboard.append(fragment);
 
     this.dom.button.restart.addEventListener("click", () => {
+      while (this.dom.scoreboard.childElementCount > 1) {
+        this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
+      }
       viewStore.reset();
       playStore.reset();
+
       viewStore.updateState(STATE.SET);
     });
   }

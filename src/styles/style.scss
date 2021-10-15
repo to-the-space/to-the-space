@@ -20,6 +20,19 @@ li {
   list-style: none;
 }
 
+.button {
+  height: 40px;
+  width: 200px;
+  border: 1px solid #0070f3;
+  background-color: transparent;
+  border-radius: 6px;
+}
+
+.button:hover {
+  background-color: #0070f3;
+  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+}
+
 .webgl {
   position: fixed;
   top: 0;
@@ -106,40 +119,25 @@ li {
   }
 
   .game-setting {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     opacity: 0;
     visibility: hidden;
 
     .game-instruction {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+      text-align: center;
+      margin-top: 20px;
 
-    .launch-button {
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      height: 40px;
-      width: 200px;
-      border: 1px solid #0070f3;
-      color: #000;
-      background-color: #ffffff;
-      border-radius: 6px;
-    }
-
-    .launch-button:hover {
-      color: #ffffff;
-      background-color: #ff0000;
-      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+      span {
+        display: block;
+        margin-top: 5px;
+      }
     }
   }
 
@@ -192,6 +190,61 @@ li {
     }
   }
 
+  .game-over {
+    position: absolute;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    .user-score-box {
+      span {
+        font-size: 20px;
+      }
+    }
+
+    .scoreboard {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+      height: 330px;
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #0070f3;
+      border-radius: 6px;
+      background-color: #000;
+      opacity: 0.5;
+
+      .attribute {
+        border-bottom: 1px solid #ffffff;
+        padding: 0px 5px;
+      }
+
+      .score-element {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+    }
+
+    .restart-button {
+      margin-top: 20px;
+      background-color: #000;
+      opacity: 0.5;
+    }
+
+    .button:hover {
+      background-color: #0070f3;
+      box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+      opacity: 1;
+    }
+  }
+
   &.load {
     .game-loading {
       opacity: 1;
@@ -201,6 +254,7 @@ li {
 
   &.start {
     .game-start {
+      opacity: 1;
       visibility: visible;
     }
   }

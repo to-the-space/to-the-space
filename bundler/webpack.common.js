@@ -1,6 +1,5 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const Dotenv = require("dotenv-webpack");
 const path = require("path");
@@ -10,6 +9,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "bundle.[contenthash].js",
+  },
+  resolve: {
+    extensions: [".js", ".json", ".css", ".scss"],
   },
   devtool: "source-map",
   plugins: [
@@ -28,7 +30,6 @@ module.exports = {
       filename: "../src/styles/style.css",
     }),
     new Dotenv(),
-    new CleanWebpackPlugin(),
   ],
   module: {
     rules: [
@@ -48,9 +49,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          process.env.NODE_ENV !== "production"
-            ? "style-loader"
-            : MiniCssExtractPlugin.loader,
+          process.env.NODE_ENV !== "production" ? "style-loader" : MiniCssExtractPlugin.loader,
           "css-loader",
           {
             loader: "sass-loader",
