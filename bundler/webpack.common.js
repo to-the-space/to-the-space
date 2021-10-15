@@ -27,7 +27,8 @@ module.exports = {
       minify: true,
     }),
     new MiniCssExtractPlugin({
-      filename: "../src/styles/style.css",
+      filename: "[name].css",
+      chunkFilename: "[id].css",
     }),
     new Dotenv(),
   ],

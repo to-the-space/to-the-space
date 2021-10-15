@@ -6,15 +6,11 @@ const Dotenv = require("dotenv-webpack");
 
 module.exports = merge(commonConfiguration, {
   mode: "production",
-  devtool: "eval-cheap-module-source-map",
-  performance: {
-    hints: false,
-  },
+  devtool: false,
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        parallel: true,
         terserOptions: {
           compress: {
             drop_console: true,
