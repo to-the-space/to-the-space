@@ -224,7 +224,7 @@ class World {
       this.physicsWorld.step(1 / 60, deltaTime, 3);
       this.spaceship.update();
 
-      gsap.to(this.camera.position, { y: this.spaceship.model.position.y + 200, ease: "none" });
+      this.camera.position.y = this.spaceship.model.position.y;
 
       this.meteorHolder.spawn(this.spaceship.model);
       this.meteorHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);

@@ -188,8 +188,6 @@ class App {
 
     const scoreList = await getScoreList();
 
-    const fragment = document.createDocumentFragment();
-
     scoreList.map((info, index) => {
       const scoreElement = document.createElement("li");
       scoreElement.classList.add("score-element");
@@ -204,15 +202,16 @@ class App {
       score.classList.add("score");
       scoreElement.append(score);
 
-      fragment.append(scoreElement);
+      this.dom.scoreboard.append(scoreElement);
     });
 
-    this.dom.scoreboard.append(fragment);
+    this.dom.button.restart.addEventListener("click", (event) => {
+      event.preventDefault();
 
-    this.dom.button.restart.addEventListener("click", () => {
-      while (this.dom.scoreboard.childElementCount > 1) {
+      while (this.dom.scoreboard.children.length > 1) {
         this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
       }
+
       viewStore.reset();
       playStore.reset();
 
