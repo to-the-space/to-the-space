@@ -6,7 +6,10 @@ const Dotenv = require("dotenv-webpack");
 
 module.exports = merge(commonConfiguration, {
   mode: "production",
-  devtool: false,
+  devtool: "eval-cheap-module-source-map",
+  performance: {
+    hints: false,
+  },
   optimization: {
     minimize: true,
     minimizer: [

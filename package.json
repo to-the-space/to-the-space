@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "webpack --config ./bundler/webpack.prod.js",
+    "build": "NODE_ENV=production webpack --config ./bundler/webpack.prod.js",
     "dev": "webpack serve --config ./bundler/webpack.dev.js",
     "prod": "webpack serve--config ./bundler/webpack.prod.js"
   },
