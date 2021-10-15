@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from "mobx";
+import { makeObservable, observable, action } from "mobx";
 
 import { STATE } from "../constants/view";
 
@@ -14,6 +14,7 @@ class ViewStore {
       energy: observable,
       updateState: action,
       updateEnergy: action,
+      reset: action,
     });
   }
 
@@ -29,6 +30,10 @@ class ViewStore {
 
   updateEnergy() {
     this.energy += 1.5;
+  }
+
+  reset() {
+    this.energy = 0;
   }
 }
 
