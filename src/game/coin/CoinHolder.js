@@ -16,12 +16,12 @@ class CoinHolder {
     }
   }
 
-  spawnCoin(spaceship) {
+  spawn(spaceship) {
     this.counter++;
 
-    if (this.counter % 50 !== 0) return;
+    if (this.counter % 30 !== 0) return;
 
-    const coinNumber = 3;
+    const coinNumber = 2;
 
     for (let i = 0; i < coinNumber; i++) {
       let coin;
@@ -58,13 +58,13 @@ class CoinHolder {
 
       const differentPosition = spaceship.position.clone().sub(coin.mesh.position.clone());
       const distance = differentPosition.length();
-      const maxDistance = spaceship.position.y - 300;
+      const maxDistance = spaceship.position.y - 1000;
 
       if (distance < 50) {
         this.coinPool.unshift(this.coinInUse.splice(i, 1)[0]);
         this.mesh.remove(coin.mesh);
 
-        physicsSpaceship.velocity.y += 20;
+        physicsSpaceship.velocity.y += 50;
 
         i--;
       } else if (coin.mesh.position.y < maxDistance) {
