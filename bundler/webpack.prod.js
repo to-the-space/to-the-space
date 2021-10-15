@@ -14,7 +14,6 @@ module.exports = merge(commonConfiguration, {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        parallel: true,
         terserOptions: {
           compress: {
             drop_console: true,

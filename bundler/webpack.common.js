@@ -27,7 +27,8 @@ module.exports = {
       minify: true,
     }),
     new MiniCssExtractPlugin({
-      filename: "../src/styles/style.css",
+      filename: "style.css",
+      chunkFilename: "[id].css",
     }),
     new Dotenv(),
   ],
@@ -55,9 +56,6 @@ module.exports = {
             loader: "sass-loader",
             options: {
               implementation: require("sass"),
-              sassOptions: {
-                fiber: require("fibers"),
-              },
             },
           },
         ],
