@@ -39,6 +39,7 @@ class App {
         percentage: document.querySelector(".loading-percentage"),
       },
       energy: {
+        guide: document.querySelector(".space-bar-guide"),
         bar: document.querySelector(".energy-bar"),
       },
       text: {
@@ -137,6 +138,13 @@ class App {
 
   playing() {
     let count = 5;
+    let energy = 0;
+
+    this.dom.energy.bar.style.height = `${energy}%`;
+
+    const timeline = gsap.timeline({ repeat: -1 });
+    timeline.to(this.dom.energy.guide, { backgroundColor: "#D3D3D3", duration: 0.1 });
+    timeline.to(this.dom.energy.guide, { backgroundColor: "#080808", duration: 0.1 });
 
     const handleSpaceBarDown = document.addEventListener("keydown", (event) => {
       event.preventDefault();
@@ -163,6 +171,8 @@ class App {
     }, 1000);
 
     setTimeout(() => {
+      timeline.clear();
+
       playStore.setIsLaunched(true);
       viewStore.updateState(STATE.LAUNCH);
       document.removeEventListener("keydown", handleSpaceBarDown);
