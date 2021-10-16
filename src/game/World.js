@@ -8,8 +8,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import Model from "./models/Model";
 import SolarSystem from "./SolarSystem";
 import Spaceship from "./models/Spaceship";
-import CoinHolder from "./coin/CoinHolder";
-import MeteorHolder from "./meteor/MeteorHolder";
+
+import Coin from "./obstacles/Coin";
+import Meteor from "./obstacles/Meteor";
+import ObstacleHolder from "./obstacles/ObstacleHolder";
 
 import { STATE } from "../constants/view";
 import viewStore from "../store/viewStore";
@@ -29,6 +31,9 @@ class World {
         this.control.reset();
         this.control.update();
 
+        this.createCoin();
+        this.createMeteor();
+
         gsap.to(this.camera.position, {
           duration: 1,
           x: 0,
@@ -39,8 +44,12 @@ class World {
 
       if (viewStore.currentState === STATE.END) {
         this.camera.position.set(0, 0, 1500);
+
         this.control.enabled = true;
         this.control.update();
+
+        this.scene.remove(this.coinHolder.mesh);
+        this.scene.remove(this.meteorHolder.mesh);
       }
     });
 
@@ -113,9 +122,6 @@ class World {
     this.spaceship.castShadow();
     this.spaceship.addToScene();
 
-    this.createCoin();
-    this.createMeteor();
-
     this.tick();
 
     window.addEventListener("resize", () => this.onWindowResize());
@@ -186,12 +192,12 @@ class World {
   }
 
   createCoin() {
-    this.coinHolder = new CoinHolder(15);
+    this.coinHolder = ObstacleHolder(3, Coin, this.spaceship.model);
     this.scene.add(this.coinHolder.mesh);
   }
 
   createMeteor() {
-    this.meteorHolder = new MeteorHolder(5);
+    this.meteorHolder = ObstacleHolder(5, Meteor, this.spaceship.model);
     this.scene.add(this.meteorHolder.mesh);
   }
 
@@ -206,11 +212,11 @@ class World {
 
       this.camera.position.y = this.spaceship.model.position.y;
 
-      this.meteorHolder.spawn(this.spaceship.model);
-      this.meteorHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);
+      this.meteorHolder.spawn();
+      this.meteorHolder.update(this.spaceship.boxBody, deltaTime);
 
-      this.coinHolder.spawn(this.spaceship.model);
-      this.coinHolder.update(this.spaceship.model, this.spaceship.boxBody, deltaTime);
+      this.coinHolder.spawn();
+      this.coinHolder.update(this.spaceship.boxBody, deltaTime);
     } else {
       this.solarSystem.update(elapsedTime);
     }

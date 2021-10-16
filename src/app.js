@@ -205,15 +205,10 @@ class App {
       this.dom.scoreboard.append(scoreElement);
     });
 
-    this.dom.button.restart.addEventListener("click", (event) => {
-      event.preventDefault();
-
+    this.dom.button.restart.addEventListener("click", () => {
       while (this.dom.scoreboard.children.length > 1) {
         this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
       }
-
-      viewStore.reset();
-      playStore.reset();
 
       viewStore.updateState(STATE.SET);
     });
