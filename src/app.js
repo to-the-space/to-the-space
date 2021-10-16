@@ -78,10 +78,6 @@ class App {
       this.dom.text.altitude.textContent = playStore.altitude;
     });
 
-    autorun(() => {
-      this.dom.energy.bar.style.height = `${viewStore.energy}%`;
-    });
-
     this.world = new World(this.dom.canvas, this.loadingManager);
   }
 
@@ -148,7 +144,9 @@ class App {
       if (event.repeat) return;
 
       if (event.key === " ") {
-        viewStore.updateEnergy();
+        energy += 1.5;
+        this.dom.energy.bar.style.height = `${energy}%`;
+
         playStore.addPower();
       }
     });

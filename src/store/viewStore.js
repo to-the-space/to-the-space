@@ -6,15 +6,12 @@ const mainContainer = document.getElementById("ui");
 
 class ViewStore {
   currentState = STATE.LOAD;
-  energy = 0;
 
   constructor() {
     makeObservable(this, {
       currentState: observable,
-      energy: observable,
       updateState: action,
       updateEnergy: action,
-      reset: action,
     });
   }
 
@@ -30,10 +27,6 @@ class ViewStore {
 
   updateEnergy() {
     this.energy += 1.5;
-  }
-
-  reset() {
-    this.energy = 0;
   }
 }
 
