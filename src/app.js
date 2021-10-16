@@ -39,6 +39,7 @@ class App {
         percentage: document.querySelector(".loading-percentage"),
       },
       energy: {
+        guide: document.querySelector(".space-bar-guide"),
         bar: document.querySelector(".energy-bar"),
       },
       text: {
@@ -76,10 +77,6 @@ class App {
     autorun(() => {
       this.dom.text.speed.textContent = playStore.speed;
       this.dom.text.altitude.textContent = playStore.altitude;
-    });
-
-    autorun(() => {
-      this.dom.energy.bar.style.height = `${viewStore.energy}%`;
     });
 
     this.world = new World(this.dom.canvas, this.loadingManager);
@@ -141,6 +138,13 @@ class App {
 
   playing() {
     let count = 5;
+    let energy = 0;
+
+    this.dom.energy.bar.style.height = `${energy}%`;
+
+    const timeline = gsap.timeline({ repeat: -1 });
+    timeline.to(this.dom.energy.guide, { backgroundColor: "#D3D3D3", duration: 0.1 });
+    timeline.to(this.dom.energy.guide, { backgroundColor: "#080808", duration: 0.1 });
 
     const handleSpaceBarDown = document.addEventListener("keydown", (event) => {
       event.preventDefault();
@@ -148,7 +152,9 @@ class App {
       if (event.repeat) return;
 
       if (event.key === " ") {
-        viewStore.updateEnergy();
+        energy += 1.5;
+        this.dom.energy.bar.style.height = `${energy}%`;
+
         playStore.addPower();
       }
     });
@@ -165,6 +171,8 @@ class App {
     }, 1000);
 
     setTimeout(() => {
+      timeline.clear();
+
       playStore.setIsLaunched(true);
       viewStore.updateState(STATE.LAUNCH);
       document.removeEventListener("keydown", handleSpaceBarDown);

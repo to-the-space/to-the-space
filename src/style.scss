@@ -9,11 +9,11 @@
 
 html,
 body {
+  position: relative;
   height: 100%;
   width: 100%;
   overflow: hidden;
   background-color: #000000;
-  position: relative;
 }
 
 li {
@@ -170,6 +170,22 @@ li {
         border-radius: 6px;
         background-color: #0070f3;
       }
+    }
+
+    .space-bar-guide {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      width: 200px;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid #808080;
+      border-radius: 6px;
+      background-color: #808080;
+      color: #000000;
     }
   }
 

@@ -56,7 +56,6 @@ class Spaceship extends Model {
     }
 
     if (speed < 0) {
-      viewStore.reset();
       playStore.reset();
 
       this.setPosition(0, 0, 0);
