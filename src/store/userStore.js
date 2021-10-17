@@ -6,19 +6,24 @@ class UserStore {
 
   constructor() {
     makeObservable(this, {
-      nickname: observable,
       score: observable,
-      addNickname: action,
-      addScore: action,
+      nickname: observable,
+      setScore: action,
+      resetScore: action,
+      setNickname: action,
     });
   }
 
-  addNickname(nickname) {
+  setNickname(nickname) {
     this.nickname = nickname;
   }
 
-  addScore(score) {
-    this.score = score;
+  setScore(newScore) {
+    this.score = Math.max(this.score, newScore);
+  }
+
+  resetScore() {
+    this.score = 0;
   }
 }
 

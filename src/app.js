@@ -10,7 +10,7 @@ import viewStore from "./store/viewStore";
 
 import { STATE } from "./constants/view";
 
-import { postUserScore, getScoreList, validateNickname } from "./utils/database";
+import { postUserScore, getScoreList } from "./utils/database";
 import { showView, showInputError } from "./utils/transition";
 
 import World from "./game/World";
@@ -108,15 +108,9 @@ class App {
   starting() {
     this.dom.button.start.addEventListener("click", async () => {
       const nicknameInput = this.dom.input.nickname.value;
-      const hasNickname = await validateNickname(nicknameInput);
 
       if (!nicknameInput) {
         showInputError(this.dom.text.inputError, "please input your nickname");
-        return;
-      }
-
-      if (hasNickname) {
-        showInputError(this.dom.text.inputError, "nickname already exist, please choose another nickname");
         return;
       }
 
@@ -217,6 +211,7 @@ class App {
         this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
       }
 
+      userStore.resetScore();
       viewStore.updateState(STATE.SET);
     });
   }
