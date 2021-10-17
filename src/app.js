@@ -10,7 +10,7 @@ import viewStore from "./store/viewStore";
 
 import { STATE } from "./constants/view";
 
-import { postUserScore, getScoreList, validateNickname } from "./utils/database";
+import { postUserScore, getScoreList } from "./utils/database";
 import { showView, showInputError } from "./utils/transition";
 
 import World from "./game/World";
@@ -103,29 +103,21 @@ class App {
       this.dom.loading.bar.style.transform = `scaleX(${progressRatio})`;
       this.dom.loading.percentage.textContent = `${percentage}%`;
     };
-
-    this.loadingManager.onError = (error) => {};
   }
 
   starting() {
     this.dom.button.start.addEventListener("click", async () => {
       const nicknameInput = this.dom.input.nickname.value;
-      const hasNickname = await validateNickname(nicknameInput);
 
       if (!nicknameInput) {
         showInputError(this.dom.text.inputError, "please input your nickname");
         return;
       }
 
-      if (hasNickname) {
-        showInputError(this.dom.text.inputError, "nickname already exist, please choose another nickname");
-        return;
-      }
-
       showView(this.dom.gameSetting, 1);
       this.dom.text.inputError.textContent = "";
 
-      userStore.addNickname(nicknameInput);
+      userStore.setNickname(nicknameInput);
       viewStore.updateState(STATE.SET);
     });
   }
@@ -146,18 +138,21 @@ class App {
     timeline.to(this.dom.energy.guide, { backgroundColor: "#D3D3D3", duration: 0.1 });
     timeline.to(this.dom.energy.guide, { backgroundColor: "#080808", duration: 0.1 });
 
-    const handleSpaceBarDown = document.addEventListener("keydown", (event) => {
+    const handleSpaceBarDown = (event) => {
       event.preventDefault();
 
       if (event.repeat) return;
 
-      if (event.key === " ") {
+      if (event.key === " " && energy < 100) {
         energy += 1.5;
+
         this.dom.energy.bar.style.height = `${energy}%`;
 
         playStore.addPower();
       }
-    });
+    };
+
+    document.addEventListener("keydown", handleSpaceBarDown);
 
     const intervalID = setInterval(() => {
       count--;
@@ -172,10 +167,10 @@ class App {
 
     setTimeout(() => {
       timeline.clear();
+      document.removeEventListener("keydown", handleSpaceBarDown);
 
       playStore.setIsLaunched(true);
       viewStore.updateState(STATE.LAUNCH);
-      document.removeEventListener("keydown", handleSpaceBarDown);
     }, 5000);
   }
 
@@ -185,12 +180,10 @@ class App {
   }
 
   async ending() {
-    this.dom.text.userScore.textContent = playStore.highestAltitude;
-
-    userStore.addScore(playStore.highestAltitude);
-
     const nickname = userStore.nickname;
     const score = userStore.score;
+
+    this.dom.text.userScore.textContent = score;
 
     postUserScore(nickname, score);
 
@@ -218,6 +211,7 @@ class App {
         this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
       }
 
+      userStore.resetScore();
       viewStore.updateState(STATE.SET);
     });
   }

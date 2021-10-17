@@ -210,7 +210,7 @@ class World {
       this.physicsWorld.step(1 / 60, deltaTime, 3);
       this.spaceship.update();
 
-      this.camera.position.y = this.spaceship.model.position.y;
+      this.camera.position.y = this.spaceship.model.position.y + 150;
 
       this.meteorHolder.spawn();
       this.meteorHolder.update(this.spaceship.boxBody, deltaTime);

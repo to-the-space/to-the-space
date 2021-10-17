@@ -10,11 +10,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const scoreBoardRef = ref(db, "scoreboard");
+const scoreBoardRef = ref(db, "scoreboard/");
 
 const postUserScore = (nickname, score) => {
-  const newPostRef = push(scoreBoardRef);
-  set(newPostRef, {
+  const newScoreRef = push(scoreBoardRef);
+  set(newScoreRef, {
     nickname,
     score,
   });
@@ -29,17 +29,4 @@ const getScoreList = async () => {
   return scoreBoard.slice(0, 10);
 };
 
-const validateNickname = async (nickname) => {
-  const snapshot = await get(query(scoreBoardRef));
-
-  if (snapshot.val()) {
-    const scoreBoard = Object.values(snapshot.val());
-    const hasNickname = scoreBoard.some((userInfo) => userInfo.nickname === nickname);
-
-    return hasNickname;
-  }
-
-  return false;
-};
-
-export { postUserScore, getScoreList, validateNickname };
+export { postUserScore, getScoreList };

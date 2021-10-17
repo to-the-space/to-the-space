@@ -8,6 +8,7 @@ import Controls from "../Controls";
 
 import playStore from "../../store/playStore";
 import viewStore from "../../store/viewStore";
+import userStore from "../../store/userStore";
 
 class Spaceship extends Model {
   constructor(model, scene, physicsWorld) {
@@ -18,7 +19,6 @@ class Spaceship extends Model {
     autorun(() => {
       if (playStore.isLaunched) {
         this.launch();
-        playStore.setIsLaunched(false);
       }
     });
   }
@@ -36,6 +36,7 @@ class Spaceship extends Model {
 
   launch() {
     const power = playStore.power;
+
     this.boxBody.applyForce(new CANNON.Vec3(0, power, 0), this.boxBody.position);
   }
 
@@ -43,16 +44,18 @@ class Spaceship extends Model {
     this.model.position.copy(this.boxBody.position);
     this.model.quaternion.copy(this.boxBody.quaternion);
 
-    const speed = Math.floor(this.boxBody.velocity.y);
-    if (speed > -1) {
-      this.enableControl();
-      playStore.changeSpeed(speed);
-    }
-
     const altitude = Math.floor(this.model.position.y);
+    const speed = Math.floor(this.boxBody.velocity.y);
+
     if (altitude > -1) {
       playStore.changeAltitude(altitude);
-      playStore.setHighestAltitude(altitude);
+      userStore.setScore(altitude);
+    }
+
+    if (speed > -1) {
+      this.enableControl();
+
+      playStore.changeSpeed(speed);
     }
 
     if (speed < 0) {
@@ -60,6 +63,7 @@ class Spaceship extends Model {
 
       this.setPosition(0, 0, 0);
       this.boxBody.position.copy(this.model.position);
+      this.boxBody.quaternion.copy(this.model.quaternion);
 
       viewStore.updateState(STATE.END);
     }

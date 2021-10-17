@@ -11,7 +11,6 @@ class ViewStore {
     makeObservable(this, {
       currentState: observable,
       updateState: action,
-      updateEnergy: action,
     });
   }
 
@@ -23,10 +22,6 @@ class ViewStore {
     mainContainer.classList.add(newState);
 
     this.currentState = newState;
-  }
-
-  updateEnergy() {
-    this.energy += 1.5;
   }
 }
 

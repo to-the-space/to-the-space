@@ -15,7 +15,7 @@ const MeteorHolder = (obstacleNumber, Obstacle, target) => {
   const spawn = () => {
     counter++;
 
-    if (counter % 50 !== 0) return;
+    if (counter % 80 !== 0) return;
 
     for (let i = 0; i < obstacleNumber; i++) {
       const obstacle = obstaclePool.length ? obstaclePool.pop() : Obstacle();
@@ -23,7 +23,7 @@ const MeteorHolder = (obstacleNumber, Obstacle, target) => {
       const minXAxis = -window.innerWidth * 0.5;
       const maxXAxis = window.innerWidth;
 
-      const minYAxis = target.position.y + window.innerHeight * 0.5;
+      const minYAxis = target.position.y + window.innerHeight;
       const maxYAxis = window.innerHeight;
 
       obstacle.mesh.position.x = minXAxis + Math.floor(Math.random() * maxXAxis);
