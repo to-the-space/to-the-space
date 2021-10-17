@@ -27,18 +27,20 @@ class World {
 
     autorun(() => {
       if (viewStore.currentState === STATE.SET) {
-        this.control.enabled = false;
-        this.control.reset();
-        this.control.update();
-
         this.createCoin();
         this.createMeteor();
+
+        this.control.reset();
 
         gsap.to(this.camera.position, {
           duration: 1,
           x: 0,
           y: 0,
           z: 500,
+          onUpdate: () => {
+            this.control.enabled = false;
+            this.control.update();
+          },
         });
       }
 
@@ -208,9 +210,10 @@ class World {
 
     if (viewStore.currentState === STATE.LAUNCH) {
       this.physicsWorld.step(1 / 60, deltaTime, 3);
+      this.spaceship.enableControl(this.sizes);
       this.spaceship.update();
 
-      this.camera.position.y = this.spaceship.model.position.y + 150;
+      this.camera.position.y = this.spaceship.model.position.y + 170;
 
       this.meteorHolder.spawn();
       this.meteorHolder.update(this.spaceship.boxBody, deltaTime);

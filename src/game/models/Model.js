@@ -40,6 +40,7 @@ class Model {
 
   createPhysicsBox(width, height, depth) {
     const boxShape = new CANNON.Box(new CANNON.Vec3(width, height, depth));
+
     this.boxBody = new CANNON.Body({
       mass: 1,
       position: new CANNON.Vec3(0, 0, 0),

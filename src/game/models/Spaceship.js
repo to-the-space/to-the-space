@@ -23,14 +23,16 @@ class Spaceship extends Model {
     });
   }
 
-  enableControl() {
-    const max = window.innerWidth * 0.5 - 100;
+  enableControl(sizes) {
+    const speed = playStore.speed / 100;
+    const max = sizes.width * 0.5 - 100;
 
     if (this.input.keys.left && this.model.position.x > -max) {
-      this.boxBody.position.x -= 2;
+      this.boxBody.position.x -= speed;
     }
+
     if (this.input.keys.right && this.model.position.x < max) {
-      this.boxBody.position.x += 2;
+      this.boxBody.position.x += speed;
     }
   }
 
@@ -48,14 +50,12 @@ class Spaceship extends Model {
     const speed = Math.floor(this.boxBody.velocity.y);
 
     if (altitude > -1) {
-      playStore.changeAltitude(altitude);
+      playStore.setAltitude(altitude);
       userStore.setScore(altitude);
     }
 
     if (speed > -1) {
-      this.enableControl();
-
-      playStore.changeSpeed(speed);
+      playStore.setSpeed(speed);
     }
 
     if (speed < 0) {

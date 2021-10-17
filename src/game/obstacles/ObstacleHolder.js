@@ -2,20 +2,23 @@ import * as THREE from "three";
 
 const MeteorHolder = (obstacleNumber, Obstacle, target) => {
   const mesh = new THREE.Object3D();
+
   const obstacleArray = [];
   const obstaclePool = [];
+
   let counter = 0;
 
   for (let i = 0; i < obstacleNumber; i++) {
     const obstacle = Obstacle();
-
     obstaclePool.push(obstacle);
   }
 
   const spawn = () => {
     counter++;
 
-    if (counter % 80 !== 0) return;
+    if (counter % 80 !== 0) {
+      return;
+    }
 
     for (let i = 0; i < obstacleNumber; i++) {
       const obstacle = obstaclePool.length ? obstaclePool.pop() : Obstacle();

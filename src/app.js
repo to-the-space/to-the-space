@@ -79,12 +79,11 @@ class App {
       this.dom.text.altitude.textContent = playStore.altitude;
     });
 
+    viewStore.updateState(STATE.LOAD);
     this.world = new World(this.dom.canvas, this.loadingManager);
   }
 
   loading() {
-    viewStore.updateState(STATE.LOAD);
-
     this.loadingManager = new THREE.LoadingManager();
 
     this.loadingManager.onLoad = () => {
@@ -124,6 +123,7 @@ class App {
 
   setting() {
     this.dom.button.launch.addEventListener("click", () => {
+      userStore.resetScore();
       viewStore.updateState(STATE.PLAY);
     });
   }
@@ -139,9 +139,9 @@ class App {
     timeline.to(this.dom.energy.guide, { backgroundColor: "#080808", duration: 0.1 });
 
     const handleSpaceBarDown = (event) => {
-      event.preventDefault();
-
-      if (event.repeat) return;
+      if (event.repeat) {
+        return;
+      }
 
       if (event.key === " " && energy < 100) {
         energy += 1.5;
@@ -211,7 +211,6 @@ class App {
         this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
       }
 
-      userStore.resetScore();
       viewStore.updateState(STATE.SET);
     });
   }
