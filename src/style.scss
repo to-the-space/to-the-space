@@ -190,19 +190,15 @@ li {
   }
 
   .game-launch {
+    position: absolute;
+    bottom: 40px;
+    left: 25px;
     opacity: 0;
     visibility: hidden;
+    font-size: 20px;
 
     .speed-box {
-      position: absolute;
-      bottom: 40px;
-      left: 40px;
-    }
-
-    .altitude-box {
-      position: absolute;
-      bottom: 80px;
-      left: 40px;
+      margin-top: 20px;
     }
   }
 

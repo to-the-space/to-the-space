@@ -14,9 +14,9 @@ class PlayStore {
       isLaunched: observable,
       reset: action,
       addPower: action,
-      changeSpeed: action,
+      setSpeed: action,
       setIsLaunched: action,
-      changeAltitude: action,
+      setAltitude: action,
     });
   }
 
@@ -24,11 +24,11 @@ class PlayStore {
     this.isLaunched = state;
   }
 
-  changeSpeed(newSpeed) {
+  setSpeed(newSpeed) {
     this.speed = newSpeed;
   }
 
-  changeAltitude(newAltitude) {
+  setAltitude(newAltitude) {
     this.altitude = newAltitude;
   }
 
