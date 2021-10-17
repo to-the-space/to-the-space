@@ -103,8 +103,6 @@ class App {
       this.dom.loading.bar.style.transform = `scaleX(${progressRatio})`;
       this.dom.loading.percentage.textContent = `${percentage}%`;
     };
-
-    this.loadingManager.onError = (error) => {};
   }
 
   starting() {
@@ -125,7 +123,7 @@ class App {
       showView(this.dom.gameSetting, 1);
       this.dom.text.inputError.textContent = "";
 
-      userStore.addNickname(nicknameInput);
+      userStore.setNickname(nicknameInput);
       viewStore.updateState(STATE.SET);
     });
   }
@@ -146,18 +144,21 @@ class App {
     timeline.to(this.dom.energy.guide, { backgroundColor: "#D3D3D3", duration: 0.1 });
     timeline.to(this.dom.energy.guide, { backgroundColor: "#080808", duration: 0.1 });
 
-    const handleSpaceBarDown = document.addEventListener("keydown", (event) => {
+    const handleSpaceBarDown = (event) => {
       event.preventDefault();
 
       if (event.repeat) return;
 
-      if (event.key === " ") {
+      if (event.key === " " && energy < 100) {
         energy += 1.5;
+
         this.dom.energy.bar.style.height = `${energy}%`;
 
         playStore.addPower();
       }
-    });
+    };
+
+    document.addEventListener("keydown", handleSpaceBarDown);
 
     const intervalID = setInterval(() => {
       count--;
@@ -172,10 +173,10 @@ class App {
 
     setTimeout(() => {
       timeline.clear();
+      document.removeEventListener("keydown", handleSpaceBarDown);
 
       playStore.setIsLaunched(true);
       viewStore.updateState(STATE.LAUNCH);
-      document.removeEventListener("keydown", handleSpaceBarDown);
     }, 5000);
   }
 
@@ -185,12 +186,10 @@ class App {
   }
 
   async ending() {
-    this.dom.text.userScore.textContent = playStore.highestAltitude;
-
-    userStore.addScore(playStore.highestAltitude);
-
     const nickname = userStore.nickname;
     const score = userStore.score;
+
+    this.dom.text.userScore.textContent = score;
 
     postUserScore(nickname, score);
 
