@@ -1,9 +1,9 @@
 class Controls {
   constructor() {
-    this.init();
+    this.#init();
   }
 
-  init() {
+  #init() {
     this.keys = {
       left: false,
       right: false,

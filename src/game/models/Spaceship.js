@@ -18,14 +18,20 @@ class Spaceship extends Model {
 
     autorun(() => {
       if (playStore.isLaunched) {
-        this.launch();
+        this.#launch();
       }
     });
   }
 
+  #launch() {
+    const power = playStore.power;
+
+    this.boxBody.applyForce(new CANNON.Vec3(0, power, 0), this.boxBody.position);
+  }
+
   enableControl(sizes) {
     const speed = playStore.speed / 100;
-    const max = sizes.width * 0.5 - 100;
+    const max = sizes.width * 0.5 - 150;
 
     if (this.input.keys.left && this.model.position.x > -max) {
       this.boxBody.position.x -= speed;
@@ -34,12 +40,6 @@ class Spaceship extends Model {
     if (this.input.keys.right && this.model.position.x < max) {
       this.boxBody.position.x += speed;
     }
-  }
-
-  launch() {
-    const power = playStore.power;
-
-    this.boxBody.applyForce(new CANNON.Vec3(0, power, 0), this.boxBody.position);
   }
 
   update() {

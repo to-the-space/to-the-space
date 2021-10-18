@@ -5,10 +5,10 @@ class SolarSystem {
     this.scene = scene;
     this.objects = [];
 
-    this.init();
+    this.#init();
   }
 
-  init() {
+  #init() {
     this.solarSystem = new THREE.Object3D();
 
     this.solarSystem.position.set(0, -300, 0);
