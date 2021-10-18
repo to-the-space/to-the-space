@@ -63,9 +63,9 @@ class World {
     const cubeTextureLoader = new THREE.CubeTextureLoader(this.loadingManager);
 
     const [moon, earth, spaceship, backgroundTexture] = await Promise.all([
-      gltfLoader.loadAsync("/models/moon/scene.gltf"),
-      gltfLoader.loadAsync("/models/earth/scene.gltf"),
-      gltfLoader.loadAsync("/models/spaceship/scene.gltf"),
+      gltfLoader.loadAsync("/models/moon/scene.glb"),
+      gltfLoader.loadAsync("/models/earth/scene.glb"),
+      gltfLoader.loadAsync("/models/spaceship/scene.glb"),
       cubeTextureLoader.loadAsync([
         "/textures/spaceCubeMap/spaceX-.png",
         "/textures/spaceCubeMap/spaceX+.png",
