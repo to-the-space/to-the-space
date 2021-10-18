@@ -10,8 +10,8 @@ import viewStore from "./store/viewStore";
 
 import { STATE } from "./constants/view";
 
-import { postUserScore, getScoreList } from "./utils/database";
-import { showView, showInputError } from "./utils/transition";
+import database from "./utils/database";
+import transition from "./utils/transition";
 
 import World from "./game/World";
 
@@ -54,22 +54,22 @@ class App {
     autorun(() => {
       switch (viewStore.currentState) {
         case STATE.LOAD:
-          this.loading();
+          this.#loading();
           break;
         case STATE.START:
-          this.starting();
+          this.#starting();
           break;
         case STATE.SET:
-          this.setting();
+          this.#setting();
           break;
         case STATE.PLAY:
-          this.playing();
+          this.#playing();
           break;
         case STATE.LAUNCH:
-          this.launching();
+          this.#launching();
           break;
         case STATE.END:
-          this.ending();
+          this.#ending();
           break;
       }
     });
@@ -83,15 +83,15 @@ class App {
     this.world = new World(this.dom.canvas, this.loadingManager);
   }
 
-  loading() {
+  #loading() {
     this.loadingManager = new THREE.LoadingManager();
 
     this.loadingManager.onLoad = () => {
       gsap.delayedCall(0.5, () => {
         viewStore.updateState(STATE.START);
 
-        showView(this.dom.canvas, 1);
-        showView(this.dom.gameStart, 1);
+        transition.showView(this.dom.canvas, 1);
+        transition.showView(this.dom.gameStart, 1);
       });
     };
 
@@ -104,16 +104,16 @@ class App {
     };
   }
 
-  starting() {
+  #starting() {
     this.dom.button.start.addEventListener("click", async () => {
       const nicknameInput = this.dom.input.nickname.value;
 
       if (!nicknameInput) {
-        showInputError(this.dom.text.inputError, "please input your nickname");
+        transition.showInputError(this.dom.text.inputError, "please input your nickname");
         return;
       }
 
-      showView(this.dom.gameSetting, 1);
+      transition.showView(this.dom.gameSetting, 1);
       this.dom.text.inputError.textContent = "";
 
       userStore.setNickname(nicknameInput);
@@ -121,14 +121,14 @@ class App {
     });
   }
 
-  setting() {
+  #setting() {
     this.dom.button.launch.addEventListener("click", () => {
       userStore.resetScore();
       viewStore.updateState(STATE.PLAY);
     });
   }
 
-  playing() {
+  #playing() {
     let count = 5;
     let energy = 0;
 
@@ -174,20 +174,20 @@ class App {
     }, 5000);
   }
 
-  launching() {
+  #launching() {
     this.dom.text.altitude.textContent = playStore.altitude;
     this.dom.text.speed.textContent = playStore.speed;
   }
 
-  async ending() {
+  async #ending() {
     const nickname = userStore.nickname;
     const score = userStore.score;
 
     this.dom.text.userScore.textContent = score;
 
-    postUserScore(nickname, score);
+    database.postUserScore(nickname, score);
 
-    const scoreList = await getScoreList();
+    const scoreList = await database.getScoreList();
 
     scoreList.map((info, index) => {
       const scoreElement = document.createElement("li");
