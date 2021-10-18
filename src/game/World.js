@@ -6,11 +6,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import Model from "./models/Model";
-import SolarSystem from "./SolarSystem";
 import Spaceship from "./models/Spaceship";
 
-import Coin from "./obstacles/Coin";
-import Meteor from "./obstacles/Meteor";
+import SolarSystem from "./SolarSystem";
 import ObstacleHolder from "./obstacles/ObstacleHolder";
 
 import { STATE } from "../constants/view";
@@ -27,8 +25,8 @@ class World {
 
     autorun(() => {
       if (viewStore.currentState === STATE.SET) {
-        this.createCoin();
-        this.createMeteor();
+        this.#createCoin();
+        this.#createMeteor();
 
         this.control.reset();
 
@@ -193,13 +191,13 @@ class World {
     this.physicsWorld = world;
   }
 
-  createCoin() {
-    this.coinHolder = ObstacleHolder(3, Coin, this.spaceship.model);
+  #createCoin() {
+    this.coinHolder = new ObstacleHolder("Coin", 3, this.spaceship.model);
     this.scene.add(this.coinHolder.mesh);
   }
 
-  createMeteor() {
-    this.meteorHolder = ObstacleHolder(5, Meteor, this.spaceship.model);
+  #createMeteor() {
+    this.meteorHolder = new ObstacleHolder("Meteor", 5, this.spaceship.model);
     this.scene.add(this.meteorHolder.mesh);
   }
 

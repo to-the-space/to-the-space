@@ -1,64 +1,78 @@
 import * as THREE from "three";
 
-const MeteorHolder = (obstacleNumber, Obstacle, target) => {
-  const mesh = new THREE.Object3D();
+import Coin from "./Coin";
+import Meteor from "./Meteor";
 
-  const obstacleArray = [];
-  const obstaclePool = [];
+class ObstacleHolder {
+  constructor(name, obstacleNumber, target) {
+    this.name = name;
+    this.target = target;
+    this.obstacleNumber = obstacleNumber;
 
-  let counter = 0;
+    this.mesh = new THREE.Object3D();
 
-  for (let i = 0; i < obstacleNumber; i++) {
-    const obstacle = Obstacle();
-    obstaclePool.push(obstacle);
+    this.obstacleArray = [];
+    this.obstaclePool = [];
+
+    this.counter = 0;
+
+    for (let i = 0; i < this.obstacleNumber; i++) {
+      const obstacle = this.name === "Coin" ? new Coin() : new Meteor();
+
+      this.obstaclePool.push(obstacle);
+    }
   }
 
-  const spawn = () => {
-    counter++;
+  spawn() {
+    this.counter++;
 
-    if (counter % 80 !== 0) {
+    if (this.counter % 80 !== 0) {
       return;
     }
 
-    for (let i = 0; i < obstacleNumber; i++) {
-      const obstacle = obstaclePool.length ? obstaclePool.pop() : Obstacle();
+    for (let i = 0; i < this.obstacleNumber; i++) {
+      let obstacle = null;
+
+      if (this.obstaclePool.length) {
+        obstacle = this.obstaclePool.pop();
+      } else {
+        obstacle = this.name === "Coin" ? new Coin() : new Meteor();
+      }
 
       const minXAxis = -window.innerWidth * 0.5;
       const maxXAxis = window.innerWidth;
 
-      const minYAxis = target.position.y + window.innerHeight;
+      const minYAxis = this.target.position.y + window.innerHeight;
       const maxYAxis = window.innerHeight;
 
       obstacle.mesh.position.x = minXAxis + Math.floor(Math.random() * maxXAxis);
       obstacle.mesh.position.y = minYAxis + Math.floor(Math.random() * maxYAxis);
       obstacle.mesh.position.z = 10;
 
-      mesh.add(obstacle.mesh);
-      obstacleArray.push(obstacle);
+      this.mesh.add(obstacle.mesh);
+      this.obstacleArray.push(obstacle);
     }
-  };
+  }
 
-  const update = (targetPhysics, deltaTime) => {
-    for (let i = 0; i < obstacleArray.length; i++) {
-      const obstacle = obstacleArray[i];
+  update(targetPhysics, deltaTime) {
+    for (let i = 0; i < this.obstacleArray.length; i++) {
+      const obstacle = this.obstacleArray[i];
 
       obstacle.mesh.position.x += Math.sin(deltaTime);
       obstacle.mesh.rotation.y += Math.random() * 0.1;
       obstacle.mesh.rotation.z += Math.random() * 0.1;
 
-      const differentPosition = target.position.clone().sub(obstacle.mesh.position.clone());
+      const differentPosition = this.target.position.clone().sub(obstacle.mesh.position.clone());
       const distance = differentPosition.length();
-      const maxDistance = target.position.y - 1000;
+      const maxDistance = this.target.position.y - 1000;
 
       if (distance < 50) {
-        obstaclePool.unshift(obstacleArray.splice(i, 1)[0]);
-        mesh.remove(obstacle.mesh);
+        this.obstaclePool.unshift(this.obstacleArray.splice(i, 1)[0]);
+        this.mesh.remove(obstacle.mesh);
 
-        if (obstacle.name === "Coin") {
+        if (this.name === "Coin") {
           targetPhysics.velocity.y += 50;
-        }
-
-        if (obstacle.name === "Meteor") {
+        } else {
           targetPhysics.velocity.y -= 150;
         }
 
@@ -66,19 +80,13 @@ const MeteorHolder = (obstacleNumber, Obstacle, target) => {
       }
 
       if (obstacle.mesh.position.y < maxDistance) {
-        obstaclePool.unshift(obstacleArray.splice(i, 1)[0]);
-        mesh.remove(obstacle.mesh);
+        this.obstaclePool.unshift(this.obstacleArray.splice(i, 1)[0]);
+        this.mesh.remove(obstacle.mesh);
 
         i--;
       }
     }
-  };
+  }
+}
 
-  return Object.freeze({
-    mesh,
-    spawn,
-    update,
-  });
-};
-
-export default MeteorHolder;
+export default ObstacleHolder;
