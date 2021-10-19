@@ -6,18 +6,20 @@ const Dotenv = require("dotenv-webpack");
 
 module.exports = merge(commonConfiguration, {
   mode: "production",
-  devtool: "eval-cheap-module-source-map",
+  devtool: false,
   performance: {
+    maxEntrypointSize: 900000,
+    maxAssetSize: 9000000,
     hints: false,
   },
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        terserOptions: {
-          compress: {
-            drop_console: true,
-          },
+        parallel: true,
+        extractComments: true,
+        compress: {
+          drop_console: true,
         },
       }),
     ],

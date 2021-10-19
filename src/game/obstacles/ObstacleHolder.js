@@ -4,6 +4,10 @@ import Coin from "./Coin";
 import Meteor from "./Meteor";
 
 class ObstacleHolder {
+  #obstacleArray = [];
+  #obstaclePool = [];
+  #counter = 0;
+
   constructor(name, obstacleNumber, target) {
     this.name = name;
     this.target = target;
@@ -11,30 +15,25 @@ class ObstacleHolder {
 
     this.mesh = new THREE.Object3D();
 
-    this.obstacleArray = [];
-    this.obstaclePool = [];
-
-    this.counter = 0;
-
     for (let i = 0; i < this.obstacleNumber; i++) {
       const obstacle = this.name === "Coin" ? new Coin() : new Meteor();
 
-      this.obstaclePool.push(obstacle);
+      this.#obstaclePool.push(obstacle);
     }
   }
 
   spawn() {
-    this.counter++;
+    this.#counter++;
 
-    if (this.counter % 80 !== 0) {
+    if (this.#counter % 80 !== 0) {
       return;
     }
 
     for (let i = 0; i < this.obstacleNumber; i++) {
       let obstacle = null;
 
-      if (this.obstaclePool.length) {
-        obstacle = this.obstaclePool.pop();
+      if (this.#obstaclePool.length) {
+        obstacle = this.#obstaclePool.pop();
       } else {
         obstacle = this.name === "Coin" ? new Coin() : new Meteor();
       }
@@ -50,13 +49,13 @@ class ObstacleHolder {
       obstacle.mesh.position.z = 10;
 
       this.mesh.add(obstacle.mesh);
-      this.obstacleArray.push(obstacle);
+      this.#obstacleArray.push(obstacle);
     }
   }
 
   update(targetPhysics, deltaTime) {
-    for (let i = 0; i < this.obstacleArray.length; i++) {
-      const obstacle = this.obstacleArray[i];
+    for (let i = 0; i < this.#obstacleArray.length; i++) {
+      const obstacle = this.#obstacleArray[i];
 
       obstacle.mesh.position.x += Math.sin(deltaTime);
       obstacle.mesh.rotation.y += Math.random() * 0.1;
@@ -67,7 +66,7 @@ class ObstacleHolder {
       const maxDistance = this.target.position.y - 1000;
 
       if (distance < 50) {
-        this.obstaclePool.unshift(this.obstacleArray.splice(i, 1)[0]);
+        this.#obstaclePool.unshift(this.#obstacleArray.splice(i, 1)[0]);
         this.mesh.remove(obstacle.mesh);
 
         if (this.name === "Coin") {
@@ -80,7 +79,7 @@ class ObstacleHolder {
       }
 
       if (obstacle.mesh.position.y < maxDistance) {
-        this.obstaclePool.unshift(this.obstacleArray.splice(i, 1)[0]);
+        this.#obstaclePool.unshift(this.#obstacleArray.splice(i, 1)[0]);
         this.mesh.remove(obstacle.mesh);
 
         i--;

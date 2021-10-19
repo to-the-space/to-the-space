@@ -1,13 +1,12 @@
-import * as THREE from "three";
 import * as CANNON from "cannon-es";
 
 class Model {
+  #defaultMaterial = new CANNON.Material("default");
+
   constructor(model, scene, physicsWorld) {
     this.model = model;
     this.scene = scene;
     this.physicsWorld = physicsWorld;
-
-    this.defaultMaterial = new CANNON.Material("default");
   }
 
   setScale(size) {
@@ -45,7 +44,7 @@ class Model {
       mass: 1,
       position: new CANNON.Vec3(0, 0, 0),
       shape: boxShape,
-      material: this.defaultMaterial,
+      material: this.#defaultMaterial,
     });
 
     this.boxBody.position.copy(this.model.position);
@@ -59,11 +58,6 @@ class Model {
 
   removeFromScene() {
     this.scene.remove(this.model);
-  }
-
-  addAxesHelper(axeLength) {
-    const axesHelper = new THREE.AxesHelper(axeLength);
-    this.model.add(axesHelper);
   }
 }
 

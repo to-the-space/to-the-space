@@ -7,13 +7,13 @@ const path = require("path");
 module.exports = {
   entry: path.resolve(__dirname, "../src/app.js"),
   output: {
-    path: path.resolve(__dirname, "../dist"),
     filename: "bundle.[contenthash].js",
+    path: path.resolve(__dirname, "../dist"),
+    clean: true,
   },
   resolve: {
     extensions: [".js", ".json", ".css", ".scss"],
   },
-  devtool: "source-map",
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
@@ -40,7 +40,8 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        include: path.resolve(__dirname, "../src"),
+        exclude: /(node_modules)|(dist)/,
         use: ["babel-loader"],
       },
       {
