@@ -1,6 +1,8 @@
 import * as THREE from "three";
 
 class Coin {
+  #name = "Coin";
+
   constructor() {
     this.name = "Coin";
 
@@ -13,6 +15,9 @@ class Coin {
     });
 
     this.mesh = new THREE.Mesh(geometry, material);
+
+  getName() {
+    return this.#name;
   }
 }
 

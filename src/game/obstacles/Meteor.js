@@ -1,10 +1,11 @@
 import * as THREE from "three";
 
 class Meteor {
-  constructor() {
-    this.name = "Meteor";
+  #name = "Meteor";
 
+  constructor() {
     const randomRadius = 10 + Math.floor(Math.random() * 30);
+
     const geometry = new THREE.TetrahedronGeometry(randomRadius, 4);
     const material = new THREE.MeshPhongMaterial({
       color: 0x808080,
@@ -14,6 +15,10 @@ class Meteor {
     });
 
     this.mesh = new THREE.Mesh(geometry, material);
+
+
+  getName() {
+    return this.#name;
   }
 }
 

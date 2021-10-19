@@ -11,6 +11,8 @@ import viewStore from "../../store/viewStore";
 import userStore from "../../store/userStore";
 
 class Spaceship extends Model {
+  #input = new Controls();
+
   constructor(model, scene, physicsWorld) {
     super(model, scene, physicsWorld);
 

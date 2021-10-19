@@ -7,13 +7,13 @@ class Controls {
     this.keys = {
       left: false,
       right: false,
-      space: false,
     };
-    document.addEventListener("keydown", (event) => this.onKeyDown(event), false);
-    document.addEventListener("keyup", (event) => this.onKeyUp(event), false);
+
+    document.addEventListener("keydown", (event) => this.#onKeyDown(event), false);
+    document.addEventListener("keyup", (event) => this.#onKeyUp(event), false);
   }
 
-  onKeyDown(event) {
+  #onKeyDown(event) {
     switch (event.key) {
       case "ArrowLeft":
         this.keys.left = true;
@@ -24,7 +24,7 @@ class Controls {
     }
   }
 
-  onKeyUp(event) {
+  #onKeyUp(event) {
     switch (event.key) {
       case "ArrowLeft":
         this.keys.left = false;

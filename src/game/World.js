@@ -14,6 +14,9 @@ import ObstacleHolder from "./obstacles/ObstacleHolder";
 import { STATE } from "../constants/view";
 import viewStore from "../store/viewStore";
 class World {
+  #clock = new THREE.Clock();
+  #oldElapsedTime = 0;
+
   constructor(canvas, loadingManager) {
     this.canvas = canvas;
     this.loadingManager = loadingManager;
@@ -197,9 +200,9 @@ class World {
   }
 
   #tick() {
-    const elapsedTime = this.clock.getElapsedTime();
-    const deltaTime = elapsedTime - this.oldElapsedTime;
-    this.oldElapsedTime = elapsedTime;
+    const elapsedTime = this.#clock.getElapsedTime();
+    const deltaTime = elapsedTime - this.#oldElapsedTime;
+    this.#oldElapsedTime = elapsedTime;
 
     if (viewStore.currentState === STATE.LAUNCH) {
       this.physicsWorld.step(1 / 60, deltaTime, 3);
@@ -231,11 +234,6 @@ class World {
     this.renderer.setSize(this.sizes.width, this.sizes.height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.shadowMap.enabled = true;
-  }
-
-  #addAxesHelper(size) {
-    const axesHelper = new THREE.AxesHelper(size);
-    this.scene.add(axesHelper);
   }
 }
 
