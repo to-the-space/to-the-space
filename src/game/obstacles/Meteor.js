@@ -16,6 +16,9 @@ class Meteor {
 
     this.mesh = new THREE.Mesh(geometry, material);
 
+    geometry.dispose();
+    material.dispose();
+  }
 
   getName() {
     return this.#name;

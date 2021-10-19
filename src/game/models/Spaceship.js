@@ -2,21 +2,19 @@ import * as CANNON from "cannon-es";
 import { autorun } from "mobx";
 
 import { STATE } from "../../constants/view";
+import { SPACESHIP } from "../../constants/model";
 
 import Model from "./Model";
 import Controls from "../Controls";
 
 import playStore from "../../store/playStore";
 import viewStore from "../../store/viewStore";
-import userStore from "../../store/userStore";
 
 class Spaceship extends Model {
   #input = new Controls();
 
   constructor(model, scene, physicsWorld) {
     super(model, scene, physicsWorld);
-
-    this.input = new Controls();
 
     autorun(() => {
       if (playStore.isLaunched) {
@@ -53,7 +51,6 @@ class Spaceship extends Model {
 
     if (altitude > -1) {
       playStore.setAltitude(altitude);
-      userStore.setScore(altitude);
     }
 
     if (speed > -1) {
@@ -61,9 +58,9 @@ class Spaceship extends Model {
     }
 
     if (speed < 0) {
-      playStore.reset();
+      this.setPosition(SPACESHIP.POSITION.X, SPACESHIP.POSITION.Y, SPACESHIP.POSITION.Z);
+      this.setRotation(SPACESHIP.ROTATION.X, SPACESHIP.ROTATION.Y, SPACESHIP.ROTATION.Z);
 
-      this.setPosition(0, 0, 0);
       this.boxBody.position.copy(this.model.position);
       this.boxBody.quaternion.copy(this.model.quaternion);
 

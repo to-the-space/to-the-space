@@ -12,6 +12,9 @@ import SolarSystem from "./SolarSystem";
 import ObstacleHolder from "./obstacles/ObstacleHolder";
 
 import { STATE } from "../constants/view";
+import { GLTF, CUBE_TEXTURE } from "../constants/url";
+import { SPACESHIP, EARTH, MOON } from "../constants/model";
+
 import viewStore from "../store/viewStore";
 class World {
   #clock = new THREE.Clock();
@@ -20,11 +23,6 @@ class World {
   constructor(canvas, loadingManager) {
     this.canvas = canvas;
     this.loadingManager = loadingManager;
-    this.clock = new THREE.Clock();
-    this.oldElapsedTime = 0;
-
-    this.currentPosition = new THREE.Vector3();
-    this.currentLookat = new THREE.Vector3();
 
     autorun(() => {
       if (viewStore.currentState === STATE.SET) {
@@ -64,17 +62,10 @@ class World {
     const cubeTextureLoader = new THREE.CubeTextureLoader(this.loadingManager);
 
     const [moon, earth, spaceship, backgroundTexture] = await Promise.all([
-      gltfLoader.loadAsync("/models/moon/scene.glb"),
-      gltfLoader.loadAsync("/models/earth/scene.glb"),
-      gltfLoader.loadAsync("/models/spaceship/scene.glb"),
-      cubeTextureLoader.loadAsync([
-        "/textures/spaceCubeMap/spaceX-.png",
-        "/textures/spaceCubeMap/spaceX+.png",
-        "/textures/spaceCubeMap/spaceY-.png",
-        "/textures/spaceCubeMap/spaceY+.png",
-        "/textures/spaceCubeMap/spaceZ-.png",
-        "/textures/spaceCubeMap/spaceZ+.png",
-      ]),
+      gltfLoader.loadAsync(GLTF.MOON),
+      gltfLoader.loadAsync(GLTF.EARTH),
+      gltfLoader.loadAsync(GLTF.SPACESHIP),
+      cubeTextureLoader.loadAsync(CUBE_TEXTURE),
     ]);
 
     this.modelStorage = {};
@@ -109,20 +100,20 @@ class World {
     this.earth = new Model(this.modelStorage.earth, this.scene);
     this.spaceship = new Spaceship(this.modelStorage.spaceship, this.scene, this.physicsWorld);
 
-    this.moon.setScale(50);
-    this.moon.setPosition(600, 0, 0);
+    this.moon.setScale(MOON.SCALE);
+    this.moon.setPosition(MOON.POSITION.X, MOON.POSITION.Y, MOON.POSITION.Z);
     this.moon.receiveShadow();
 
     this.solarSystem.add(this.moon.model);
 
-    this.earth.setPosition(60, -520, -50);
+    this.earth.setPosition(EARTH.POSITION.X, EARTH.POSITION.Y, EARTH.POSITION.Z);
     this.earth.receiveShadow();
     this.earth.addToScene();
 
-    this.spaceship.setScale(8);
-    this.spaceship.setPosition(0, 0, 0);
-    this.spaceship.setRotation(0, -Math.PI * 0.5, 0);
-    this.spaceship.createPhysicsBox(30, 130, 50);
+    this.spaceship.setScale(SPACESHIP.SCALE);
+    this.spaceship.setPosition(SPACESHIP.POSITION.X, SPACESHIP.POSITION.Y, SPACESHIP.POSITION.Z);
+    this.spaceship.setRotation(SPACESHIP.ROTATION.X, SPACESHIP.ROTATION.Y, SPACESHIP.ROTATION.Z);
+    this.spaceship.createPhysicsBox(SPACESHIP.PHYSICS.X, SPACESHIP.PHYSICS.Y, SPACESHIP.PHYSICS.Z);
     this.spaceship.castShadow();
     this.spaceship.addToScene();
 

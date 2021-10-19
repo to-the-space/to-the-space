@@ -4,8 +4,6 @@ class Coin {
   #name = "Coin";
 
   constructor() {
-    this.name = "Coin";
-
     const geometry = new THREE.TetrahedronGeometry(8, 2);
     const material = new THREE.MeshPhongMaterial({
       color: 0xffd700,
@@ -15,6 +13,10 @@ class Coin {
     });
 
     this.mesh = new THREE.Mesh(geometry, material);
+
+    geometry.dispose();
+    material.dispose();
+  }
 
   getName() {
     return this.#name;
