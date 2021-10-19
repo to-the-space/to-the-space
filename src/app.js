@@ -123,7 +123,7 @@ class App {
 
   #setting() {
     this.dom.button.launch.addEventListener("click", () => {
-      userStore.resetScore();
+      playStore.reset();
       viewStore.updateState(STATE.PLAY);
     });
   }
@@ -181,7 +181,7 @@ class App {
 
   async #ending() {
     const nickname = userStore.nickname;
-    const score = userStore.score;
+    const score = playStore.altitude;
 
     this.dom.text.userScore.textContent = score;
 
