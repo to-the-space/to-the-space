@@ -18,9 +18,6 @@ module.exports = merge(commonConfiguration, {
       new TerserPlugin({
         parallel: true,
         extractComments: true,
-        compress: {
-          drop_console: true,
-        },
       }),
     ],
   },
