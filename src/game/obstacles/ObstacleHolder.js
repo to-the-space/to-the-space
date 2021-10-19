@@ -65,7 +65,7 @@ class ObstacleHolder {
       const distance = differentPosition.length();
       const maxDistance = this.target.position.y - 1000;
 
-      if (distance < 50) {
+      if (distance < 50 + obstacle.mesh.scale.x) {
         this.#obstaclePool.unshift(this.#obstacleArray.splice(i, 1)[0]);
         this.mesh.remove(obstacle.mesh);
 

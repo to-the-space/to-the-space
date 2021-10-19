@@ -1,7 +1,7 @@
 const GLTF = {
   SPACESHIP: "/models/spaceship/scene.glb",
   EARTH: "/models/earth/scene.glb",
-  MOON: "/models/spaceship/scene.glb",
+  MOON: "/models/moon/scene.glb",
 };
 
 const CUBE_TEXTURE = [
