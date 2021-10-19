@@ -5,10 +5,7 @@ const Dotenv = require("dotenv-webpack");
 const path = require("path");
 
 module.exports = {
-  entry: {
-    app: path.resolve(__dirname, "../src/app.js"),
-    game: path.resolve(__dirname, "../src/game/World.js"),
-  },
+  entry: path.resolve(__dirname, "../src/app.js"),
   output: {
     filename: "bundle.[contenthash].js",
     path: path.resolve(__dirname, "../dist"),
