@@ -15,12 +15,15 @@ class Controls {
       document.addEventListener("keydown", (event) => this.#onKeyDown(event), false);
       document.addEventListener("keyup", (event) => this.#onKeyUp(event), false);
     } else {
-      document.addEventListener("touchstart", (event) => this.#onTouchStart(event), false);
-      document.addEventListener("touchend", (event) => this.#onTouchEnd(event), false);
+      const canvas = document.querySelector("canvas.webgl");
+      canvas.addEventListener("touchstart", (event) => this.#onTouchStart(event), false);
+      canvas.addEventListener("touchend", (event) => this.#onTouchEnd(event), false);
     }
   }
 
   #onKeyDown(event) {
+    event.preventDefault();
+
     switch (event.key) {
       case "ArrowLeft":
         this.keys.left = true;
@@ -32,6 +35,8 @@ class Controls {
   }
 
   #onKeyUp(event) {
+    event.preventDefault();
+
     switch (event.key) {
       case "ArrowLeft":
         this.keys.left = false;
@@ -43,6 +48,8 @@ class Controls {
   }
 
   #onTouchStart(event) {
+    event.preventDefault();
+
     const clientX = event.touches[0].clientX;
 
     if (clientX > window.innerWidth * 0.5) {
@@ -52,7 +59,9 @@ class Controls {
     }
   }
 
-  #onTouchEnd() {
+  #onTouchEnd(event) {
+    event.preventDefault();
+
     this.keys.left = false;
     this.keys.right = false;
   }

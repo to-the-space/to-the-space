@@ -150,6 +150,8 @@ class App {
     this.dom.energy.bar.style.height = `${energy}%`;
 
     const handleSpaceBarDown = (event) => {
+      event.preventDefault();
+
       if (event.repeat) {
         return;
       }
@@ -163,7 +165,9 @@ class App {
       }
     };
 
-    const handlePointerDown = () => {
+    const handlePointerDown = (event) => {
+      event.preventDefault();
+
       if (energy < 100) {
         energy += 1.5;
 
