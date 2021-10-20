@@ -1,5 +1,5 @@
 const SPACESHIP = {
-  SCALE: 8,
+  SCALE: 6,
   POSITION: {
     X: 0,
     Y: 0,
@@ -12,7 +12,7 @@ const SPACESHIP = {
   },
   PHYSICS: {
     X: 30,
-    Y: 130,
+    Y: 100,
     Z: 50,
   },
 };

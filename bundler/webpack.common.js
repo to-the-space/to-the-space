@@ -24,6 +24,8 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "../src/index.html"),
+      favicon: path.resolve(__dirname, "../favicon.png"),
+      meta: { viewport: "width=device-width, initial-scale=1, shrink-to-fit=no" },
       minify: true,
     }),
     new MiniCssExtractPlugin({

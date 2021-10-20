@@ -6,11 +6,14 @@ const mainContainer = document.getElementById("ui");
 
 class ViewStore {
   currentState = STATE.LOAD;
+  deviceType = "";
 
   constructor() {
     makeObservable(this, {
       currentState: observable,
+      deviceType: observable,
       updateState: action,
+      setDeviceType: action,
     });
   }
 
@@ -22,6 +25,10 @@ class ViewStore {
     mainContainer.classList.add(newState);
 
     this.currentState = newState;
+  }
+
+  setDeviceType(deviceType) {
+    this.deviceType = deviceType;
   }
 }
 

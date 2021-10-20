@@ -12,6 +12,7 @@ import { STATE } from "./constants/view";
 
 import database from "./utils/database";
 import transition from "./utils/transition";
+import detectDevice from "./utils/detectDevice";
 
 import World from "./game/World";
 
@@ -79,6 +80,12 @@ class App {
       this.dom.text.altitude.textContent = playStore.altitude;
     });
 
+    autorun(() => {
+      const currentDeviceType = detectDevice();
+
+      viewStore.setDeviceType(currentDeviceType);
+    });
+
     viewStore.updateState(STATE.LOAD);
     this.world = new World(this.dom.canvas, this.loadingManager);
   }
@@ -105,27 +112,35 @@ class App {
   }
 
   #starting() {
-    this.dom.button.start.addEventListener("click", async () => {
-      const nicknameInput = this.dom.input.nickname.value;
+    this.dom.button.start.addEventListener(
+      "click",
+      async () => {
+        const nicknameInput = this.dom.input.nickname.value;
 
-      if (!nicknameInput) {
-        transition.showInputError(this.dom.text.inputError, "please input your nickname");
-        return;
-      }
+        if (!nicknameInput) {
+          transition.showInputError(this.dom.text.inputError, "please input your nickname");
+          return;
+        }
 
-      transition.showView(this.dom.gameSetting, 1);
-      this.dom.text.inputError.textContent = "";
+        transition.showView(this.dom.gameSetting, 1);
+        this.dom.text.inputError.textContent = "";
 
-      userStore.setNickname(nicknameInput);
-      viewStore.updateState(STATE.SET);
-    });
+        userStore.setNickname(nicknameInput);
+        viewStore.updateState(STATE.SET);
+      },
+      false,
+    );
   }
 
   #setting() {
-    this.dom.button.launch.addEventListener("click", () => {
-      playStore.reset();
-      viewStore.updateState(STATE.PLAY);
-    });
+    this.dom.button.launch.addEventListener(
+      "click",
+      () => {
+        playStore.reset();
+        viewStore.updateState(STATE.PLAY);
+      },
+      false,
+    );
   }
 
   #playing() {
@@ -133,10 +148,6 @@ class App {
     let energy = 0;
 
     this.dom.energy.bar.style.height = `${energy}%`;
-
-    const timeline = gsap.timeline({ repeat: -1 });
-    timeline.to(this.dom.energy.guide, { backgroundColor: "#D3D3D3", duration: 0.1 });
-    timeline.to(this.dom.energy.guide, { backgroundColor: "#080808", duration: 0.1 });
 
     const handleSpaceBarDown = (event) => {
       if (event.repeat) {
@@ -152,7 +163,27 @@ class App {
       }
     };
 
-    document.addEventListener("keydown", handleSpaceBarDown);
+    const handlePointerDown = () => {
+      if (energy < 100) {
+        energy += 1.5;
+
+        this.dom.energy.bar.style.height = `${energy}%`;
+
+        playStore.addPower();
+      }
+    };
+
+    const timeline = gsap.timeline({ repeat: -1 });
+    timeline.to(this.dom.energy.guide, { backgroundColor: "#D3D3D3", duration: 0.1 });
+    timeline.to(this.dom.energy.guide, { backgroundColor: "#080808", duration: 0.1 });
+
+    if (viewStore.deviceType === "desktop") {
+      this.dom.energy.guide.textContent = "TAB SPACE BAR";
+      document.addEventListener("keydown", handleSpaceBarDown, false);
+    } else {
+      this.dom.energy.guide.textContent = "TOUCH SCREEN";
+      document.addEventListener("pointerdown", handlePointerDown, false);
+    }
 
     const intervalID = setInterval(() => {
       count--;
@@ -167,7 +198,12 @@ class App {
 
     setTimeout(() => {
       timeline.clear();
-      document.removeEventListener("keydown", handleSpaceBarDown);
+
+      if (viewStore.deviceType === "desktop") {
+        document.removeEventListener("keydown", handleSpaceBarDown);
+      } else {
+        document.removeEventListener("pointerdown", handlePointerDown);
+      }
 
       playStore.setIsLaunched(true);
       viewStore.updateState(STATE.LAUNCH);
@@ -206,13 +242,17 @@ class App {
       this.dom.scoreboard.append(scoreElement);
     });
 
-    this.dom.button.restart.addEventListener("click", () => {
-      while (this.dom.scoreboard.children.length > 1) {
-        this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
-      }
+    this.dom.button.restart.addEventListener(
+      "click",
+      () => {
+        while (this.dom.scoreboard.children.length > 1) {
+          this.dom.scoreboard.removeChild(this.dom.scoreboard.lastChild);
+        }
 
-      viewStore.updateState(STATE.SET);
-    });
+        viewStore.updateState(STATE.SET);
+      },
+      false,
+    );
   }
 }
 
