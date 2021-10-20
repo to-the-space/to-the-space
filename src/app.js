@@ -52,6 +52,9 @@ class App {
       },
     };
 
+    const currentDeviceType = detectDevice();
+    viewStore.setDeviceType(currentDeviceType);
+
     autorun(() => {
       switch (viewStore.currentState) {
         case STATE.LOAD:
@@ -80,13 +83,8 @@ class App {
       this.dom.text.altitude.textContent = playStore.altitude;
     });
 
-    autorun(() => {
-      const currentDeviceType = detectDevice();
-
-      viewStore.setDeviceType(currentDeviceType);
-    });
-
     viewStore.updateState(STATE.LOAD);
+
     this.world = new World(this.dom.canvas, this.loadingManager);
   }
 
