@@ -31,7 +31,7 @@ class Spaceship extends Model {
 
   enableControl(sizes) {
     const speed = playStore.speed / 100;
-    const maxXPosition = sizes.width * 0.5 - 100;
+    const maxXPosition = sizes.width * 0.5 - 50;
 
     if (this.#input.keys.left && this.model.position.x > -maxXPosition) {
       this.boxBody.position.x -= speed;

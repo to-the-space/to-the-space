@@ -1,3 +1,5 @@
+import viewStore from "../store/viewStore";
+
 class Controls {
   constructor() {
     this.#init();
@@ -9,8 +11,13 @@ class Controls {
       right: false,
     };
 
-    document.addEventListener("keydown", (event) => this.#onKeyDown(event), false);
-    document.addEventListener("keyup", (event) => this.#onKeyUp(event), false);
+    if (viewStore.deviceType === "desktop") {
+      document.addEventListener("keydown", (event) => this.#onKeyDown(event), false);
+      document.addEventListener("keyup", (event) => this.#onKeyUp(event), false);
+    } else {
+      document.addEventListener("touchstart", (event) => this.#onTouchStart(event), false);
+      document.addEventListener("touchend", (event) => this.#onTouchEnd(event), false);
+    }
   }
 
   #onKeyDown(event) {
@@ -33,6 +40,21 @@ class Controls {
         this.keys.right = false;
         break;
     }
+  }
+
+  #onTouchStart(event) {
+    const clientX = event.touches[0].clientX;
+
+    if (clientX > window.innerWidth * 0.5) {
+      this.keys.right = true;
+    } else {
+      this.keys.left = true;
+    }
+  }
+
+  #onTouchEnd() {
+    this.keys.left = false;
+    this.keys.right = false;
   }
 }
 
