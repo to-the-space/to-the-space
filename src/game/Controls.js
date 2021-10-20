@@ -16,14 +16,13 @@ class Controls {
       document.addEventListener("keyup", (event) => this.#onKeyUp(event), false);
     } else {
       const canvas = document.querySelector("canvas.webgl");
+
       canvas.addEventListener("touchstart", (event) => this.#onTouchStart(event), false);
       canvas.addEventListener("touchend", (event) => this.#onTouchEnd(event), false);
     }
   }
 
   #onKeyDown(event) {
-    event.preventDefault();
-
     switch (event.key) {
       case "ArrowLeft":
         this.keys.left = true;
@@ -35,8 +34,6 @@ class Controls {
   }
 
   #onKeyUp(event) {
-    event.preventDefault();
-
     switch (event.key) {
       case "ArrowLeft":
         this.keys.left = false;
