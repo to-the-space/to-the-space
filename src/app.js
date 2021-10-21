@@ -17,6 +17,9 @@ import detectDevice from "./utils/detectDevice";
 import World from "./game/World";
 
 class App {
+  #nickname = "";
+  #score = "";
+
   constructor() {
     this.dom = {
       mainContainer: document.getElementById("ui"),
@@ -218,12 +221,12 @@ class App {
   }
 
   async #ending() {
-    const nickname = userStore.nickname;
-    const score = playStore.altitude;
+    this.#nickname = userStore.nickname;
+    this.#score = playStore.altitude;
 
-    this.dom.text.userScore.textContent = score;
+    this.dom.text.userScore.textContent = this.#score;
 
-    database.postUserScore(nickname, score);
+    database.postUserScore(this.#nickname, this.#score);
 
     const scoreList = await database.getScoreList();
 

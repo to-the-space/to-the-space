@@ -15,6 +15,7 @@ const database = (() => {
 
   const postUserScore = (nickname, score) => {
     const newScoreRef = push(scoreBoardRef);
+
     set(newScoreRef, {
       nickname,
       score,

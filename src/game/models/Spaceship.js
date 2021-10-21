@@ -12,6 +12,7 @@ import viewStore from "../../store/viewStore";
 
 class Spaceship extends Model {
   #input = new Controls();
+  #power = 0;
 
   constructor(model, scene, physicsWorld) {
     super(model, scene, physicsWorld);
@@ -24,9 +25,9 @@ class Spaceship extends Model {
   }
 
   #launch() {
-    const power = playStore.power;
+    this.#power = playStore.power;
 
-    this.boxBody.applyForce(new CANNON.Vec3(0, power, 0), this.boxBody.position);
+    this.boxBody.applyForce(new CANNON.Vec3(0, this.#power, 0), this.boxBody.position);
   }
 
   enableControl(sizes) {
