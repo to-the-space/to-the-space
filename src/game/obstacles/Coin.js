@@ -18,7 +18,7 @@ class Coin {
     material.dispose();
   }
 
-  getName() {
+  get Name() {
     return this.#name;
   }
 }
