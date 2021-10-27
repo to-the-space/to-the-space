@@ -5,7 +5,7 @@
 
 [To The Space](https://www.to-the-space.space/) 는 장애물을 피해 로켓을 최대한 높이 발사하는 3D 웹 게임입니다.
 
-![preview](../to-the-space/assets/preview.gif)
+![preview](/assets/preview.gif)
 
 <br>
 
