@@ -58,10 +58,12 @@ class ObstacleHolder {
       const obstacle = this.#obstacleArray[i];
 
       obstacle.mesh.position.x += Math.sin(deltaTime);
+
       obstacle.mesh.rotation.y += Math.random() * 0.1;
       obstacle.mesh.rotation.z += Math.random() * 0.1;
 
-      const differentPosition = this.target.position.clone().sub(obstacle.mesh.position.clone());
+      const obstaclePosition = obstacle.mesh.position.clone();
+      const differentPosition = this.target.position.clone().sub(obstaclePosition);
       const distance = differentPosition.length();
       const maxDistance = this.target.position.y - 1000;
 
