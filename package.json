@@ -2,10 +2,14 @@
   "name": "to-the-space",
   "version": "1.0.0",
   "private": true,
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
   "scripts": {
     "build": "NODE_ENV=production webpack --config ./bundler/webpack.prod.js",
     "dev": "webpack serve --config ./bundler/webpack.dev.js",
-    "prod": "webpack serve--config ./bundler/webpack.prod.js"
+    "prod": "webpack serve--config ./bundler/webpack.prod.js",
+    "test": "jest --watchAll"
   },
   "author": "seo jun Yoo",
   "license": "ISC",
@@ -26,6 +30,7 @@
     "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.2",
+    "jest": "^27.3.1",
     "mini-css-extract-plugin": "^2.3.0",
     "portfinder-sync": "0.0.2",
     "prettier": "^2.4.1",

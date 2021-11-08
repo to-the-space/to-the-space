@@ -26,7 +26,7 @@
 
 # 🧑‍🚀 Motivation
 
-### Why 3D?
+### Why 3D Game?
 이전부터 3D 기술을 사용하여 생동감과 입체감을 표현할 수 있는 웹 서비스를 만들고 싶다고 생각하였습니다. 최근 크게 관심을 받는 SpaceX 우주 로켓 발사에서 모티브를 얻어 관련 주제로 여러 사람이 즐길 수 있는 게임을 만들면 재미있을 거 같다고 생각하여 To The Space 프로젝트를 기획하게 되었습니다.
 
 ### Why Vanilla JS?
@@ -59,41 +59,21 @@
 
 # 🗓 Planning
 
-  <details>
-    <summary>
-      1 주차 09.27 - 10.03
-    </summary>
+### 1 주차 09.27 - 10.03
+  - 아이디어 기획 & 목업
+  - 기술 스택 학습 (Three JS & Cannon JS)
 
-    - 아이디어 기획 & 목업
-    - 기술 스택 학습 (three js & cannon js)
-  </details>
+### 2주차 10.04 - 10.10
+  - Webpack 기본 설정 (entry, output, plugin, module)
+  - Assets(3D Model, texture) 수집
+  - 개발 진행
 
-  <br>
+### 3주차 10.11 - 10.15
+  - Netlify 배포
+  - README 작성
+  - 테스트 코드 작성
+  - 코드 refactoring
 
-  <details>
-    <summary>
-      2주차 10.04 - 10.10
-    </summary>
-
-    - Webpack 기본 설정 (entry, output, plugin, module)
-    - asset(3D Model, texture) 수집
-    - 개발 진행
-  </details>
-
-  <br>
-
-  <details>
-    <summary>
-      3주차 10.11 - 10.15
-    </summary>
-
-    - Netlify 배포
-    - readme 작성
-    - 테스트 코드 작성
-    - 코드 refactoring
-  </details>
-
-  <br>
   <br>
 
   # ⚙️ Tech Stack
@@ -111,10 +91,10 @@
 
 ### Object Orient Programming (OOP)
 
-그동안 React Hooks를 이용한 함수형 프로그래밍 방식에 익숙해져 있었고 이론적으로는 공부했었지만, 프로젝트에 실제로 OOP를 이해하고 적용해본 적은 처음이라 직접 OOP 방식을 프로젝트에 적용하는 데 까다로웠습니다. 해당 Challenge를 해결하기 위해 OOP 방식에서 중요한 두 가지 개념에 대해 프로젝트에 적용하려고 노력하였습니다. 첫 번째로는 추상화를 위해 객체를 구현하면서 메소드의 기능을 보편적으로 사용할 수 있도록 최소한의 정보를 담은 함수명을 작성하기 위해 노력하였습니다. 두 번째로, 캡슐화가 필요한 변수나 메소드의 예상치 못한 변화를 방지하기 위해서 Factory function을 이용한 util 함수에서는 Object.freeze를 이용하였고, class 문법을 이용한 대부분 함수에서는 private field를 적용하여 값의 일관성을 유지하였습니다.
+그동안 React Hooks를 이용한 함수형 프로그래밍 방식에 익숙해져 있었고 이론적으로는 공부했었지만, 프로젝트에 실제로 OOP를 이해하고 적용해본 적은 처음이라 직접 OOP 방식을 프로젝트에 적용하는 데 까다로웠습니다. 해당 Challenge를 해결하기 위해 OOP 방식에서 중요한 두 가지 개념에 대해 프로젝트에 적용하려고 노력하였습니다. 첫 번째로는 추상화를 위해 객체를 구현하면서 메소드의 기능을 보편적으로 사용할 수 있도록 최소한의 정보를 담은 함수명을 작성하기 위해 노력하였습니다. 두 번째로, 캡슐화가 필요한 변수나 메소드의 예상치 못한 변화를 방지하기 위해서 Factory function을 이용한 util 함수에서는 `Object.freeze`를 이용하였고, class 문법을 이용한 대부분 함수에서는 private field를 적용하여 값의 일관성을 유지하였습니다.
 
 <details>
-  <summary>예시</summary>
+  <summary>예시 코드</summary>
 
 ```js
 class Model {
@@ -169,10 +149,10 @@ class Model {
 
 ### 반응형 웹 디자인 (RWD)
 
-어떤 환경에서든 게임이 구동될 수 있도록 반응형 웹 디자인을 도입하였습니다. 기본적으로 canvas element는 300 * 150픽셀이지만 CSS 전체 요소의 margin과 padding을 0으로 두고 body 요소의 높이와 너비를 100%로 주어 canvas가 화면 전체를 차지할 수 있도록 하였습니다. 다만, 이렇게 canvas가 화면 전체를 차지하게 되면 3D 객체들이 렌더링 된 화면에 따라 늘어나거나 줄어드는 현상이 있었고, 저화질로 인해 객체들이 깨지거나 흐려지는 현상이 발견되었습니다. 이 문제를 해결하기 위해 창이 변화할 때마다 Camera aspect(비율) 속성을 canvas 화면에 맞춰주고 `renderer.setSize` 와 `renderer.setPixelRatio` 두 메소드를 이용하여 해상도를 맞춰주는 작업을 하였습니다. 또한, PC 화면에서는 키보드를 조작하여 로켓 3D 객체를 조작할 수 있도록 "keydown" 과 "keyup" 이벤트를 사용하였고 모바일 환경에서는 "touchstart" 과 "touchend" 이벤트를 listener에 등록할 수 있도록 분기 처리하였습니다.
+어떤 환경에서든 게임이 구동될 수 있도록 반응형 웹 디자인을 도입하였습니다. 기본적으로 `canvas` 요소는 300 * 150픽셀이지만 CSS 전체 요소의 `margin`과 `padding`을 0으로 두고 `body` 요소의 높이와 너비를 100%로 주어 `canvas`가 화면 전체를 차지할 수 있도록 하였습니다. 다만, 이렇게 `canvas`가 화면 전체를 차지하게 되면 3D 객체들이 렌더링 된 화면에 따라 늘어나거나 줄어드는 현상이 있었고, 저화질로 인해 객체들이 깨지거나 흐려지는 현상이 발견되었습니다. 이 문제를 해결하기 위해 창이 변화할 때마다 Camera aspect(비율) 속성을 `canvas` 화면에 맞춰주고 `renderer.setSize` 와 `renderer.setPixelRatio` 두 메소드를 이용하여 해상도를 맞춰주는 작업을 하였습니다. 또한, PC 화면에서는 키보드를 조작하여 로켓 3D 객체를 조작할 수 있도록 "keydown" 과 "keyup" 이벤트를 사용하였고 모바일 환경에서는 "touchstart" 과 "touchend" 이벤트를 listener에 등록할 수 있도록 분기 처리하였습니다.
 
 <details>
-  <summary>해상도 맞춤 코드</summary>
+  <summary>해상도 맞춤 예시 코드</summary>
 
 ```js
 onWindowResize() {
@@ -214,10 +194,10 @@ if (currentDeviceType === "desktop") {
 
 ### Flash Of Unstyled Content (FOUC)
 
-처음 웹페이지 로딩 시 1~2초 정도 CSS가 적용되지 않은 html 요소들이 렌더링 되는 현상을 발견하였습니다. 리서치를 해본 결과 Scss webpack loader 설정 시 style-loader를 사용하면 inline style이 우선 적용되는데 해당 프로젝트에서는 별도의 inline style이 없어 SCSS가 로딩되기 이전에 default style로 우선 렌더링 된다는 사실을 알 수 있었습니다. 이 문제를 해결하기 위해 html 파일과 CSS 파일이 모두 로딩이 완료되고 나서 화면이 표시될 수 있도록 두 파일을 병렬적으로 로딩시킬 수 있게 MiniCssExtractPlugin을 사용하여 최초 번들링시 SCSS를 추출하여 별도의 CSS 파일로 컴파일하는 방식을 사용하여 시간 차 렌더링 이슈를 해결할 수 있었습니다.
+처음 웹페이지 로딩 시 1~2초 정도 CSS가 적용되지 않은 html 요소들이 렌더링 되는 현상을 발견하였습니다. 리서치를 해본 결과 Scss webpack loader 설정 시 `style-loader`를 사용하면 inline style이 우선 적용되는데 해당 프로젝트에서는 별도의 inline style이 없어 SCSS가 로딩되기 이전에 default style로 우선 렌더링 된다는 사실을 알 수 있었습니다. 이 문제를 해결하기 위해 html 파일과 CSS 파일이 모두 로딩이 완료되고 나서 화면이 표시될 수 있도록 두 파일을 병렬적으로 로딩시킬 수 있게 `MiniCssExtractPlugin`을 사용하여 최초 번들링시 SCSS를 추출하여 별도의 CSS 파일로 컴파일하는 방식을 사용하여 시간 차 렌더링 이슈를 해결할 수 있었습니다.
 
 <details>
-  <summary>예시</summary>
+  <summary>예시 코드</summary>
 
 ```js
 //before
