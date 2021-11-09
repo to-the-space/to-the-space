@@ -181,10 +181,8 @@ if (currentDeviceType === "desktop") {
   document.addEventListener("keydown", (event) => this.#onKeyDown(event), false);
   document.addEventListener("keyup", (event) => this.#onKeyUp(event), false);
 } else {
-  const canvas = document.querySelector("canvas.webgl");
-
-  canvas.addEventListener("touchstart", (event) => this.#onTouchStart(event), false);
-  canvas.addEventListener("touchend", (event) => this.#onTouchEnd(event), false);
+  document.addEventListener("touchstart", (event) => this.#onTouchStart(event), false);
+  document.addEventListener("touchend", (event) => this.#onTouchEnd(event), false);
 }
 ```
 
