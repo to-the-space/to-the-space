@@ -115,7 +115,7 @@ class App {
   #starting() {
     this.dom.button.start.addEventListener(
       "click",
-      async () => {
+      () => {
         const nicknameInput = this.dom.input.nickname.value;
 
         if (!nicknameInput) {
