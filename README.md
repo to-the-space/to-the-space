@@ -194,7 +194,7 @@ if (currentDeviceType === "desktop") {
 
 ### Flash Of Unstyled Content (FOUC)
 
-처음 웹페이지 로딩 시 1~2초 정도 CSS가 적용되지 않은 html 요소들이 렌더링 되는 현상을 발견하였습니다. 리서치를 해본 결과 Scss webpack loader 설정 시 `style-loader`를 사용하면 inline style이 우선 적용되는데 해당 프로젝트에서는 별도의 inline style이 없어 SCSS가 로딩되기 이전에 default style로 우선 렌더링 된다는 사실을 알 수 있었습니다. 이 문제를 해결하기 위해 html 파일과 CSS 파일이 모두 로딩이 완료되고 나서 화면이 표시될 수 있도록 두 파일을 병렬적으로 로딩시킬 수 있게 `MiniCssExtractPlugin`을 사용하여 최초 번들링시 SCSS를 추출하여 별도의 CSS 파일로 컴파일하는 방식을 사용하여 시간 차 렌더링 이슈를 해결할 수 있었습니다.
+처음 웹페이지 로딩 시 1~2초 정도 CSS가 적용되지 않은 html 요소들이 렌더링 되는 현상을 발견하였습니다. 리서치를 해본 결과 scss webpack loader 설정 시 `style-loader`를 사용하면 scss파일의 css style을 javascript 번들에 포함 시키기 때문에 브라우저가 javascript를 파싱하기 이전 html에 inline style을 우선 적용시키는데 해당 프로젝트에서는 별도의 inline style이 없어 javascript가 파싱되고 style이 이전에 default style로 우선 렌더링 된다는 사실을 알 수 있었습니다. 이 문제를 해결하기 위해 `MiniCssExtractPlugin`을 사용하여 scss파일을 별도의 css 파일로 만들어 브라우저에서 html과 css 파일이 병렬적으로 로딩되게 하여 css style이 적용된 html 파일이 렌더링 되게 하여 FOUC 이슈를 해결할 수 있었습니다.
 
 <details>
   <summary>예시 코드</summary>
