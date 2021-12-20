@@ -5,12 +5,12 @@ const GLTF = {
 };
 
 const CUBE_TEXTURE = [
-  "/textures/spaceCubeMap/spaceX-.png",
-  "/textures/spaceCubeMap/spaceX+.png",
-  "/textures/spaceCubeMap/spaceY-.png",
-  "/textures/spaceCubeMap/spaceY+.png",
-  "/textures/spaceCubeMap/spaceZ-.png",
-  "/textures/spaceCubeMap/spaceZ+.png",
+  "/textures/spaceCubeMap/spaceX-.webp",
+  "/textures/spaceCubeMap/spaceX+.webp",
+  "/textures/spaceCubeMap/spaceY-.webp",
+  "/textures/spaceCubeMap/spaceY+.webp",
+  "/textures/spaceCubeMap/spaceZ-.webp",
+  "/textures/spaceCubeMap/spaceZ+.webp",
 ];
 
 export { GLTF, CUBE_TEXTURE };

@@ -24,9 +24,9 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "../src/index.html"),
-      favicon: path.resolve(__dirname, "../assets/favicon.png"),
+      favicon: path.resolve(__dirname, "../assets/favicon.webp"),
       meta: {
-        viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
+        viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0",
       },
       minify: true,
     }),
