@@ -3,7 +3,7 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/3216b7c6-d5d6-4acd-bf0f-3ea1555228b0/deploy-status)](https://app.netlify.com/sites/nostalgic-poincare-9c2731/deploys)
 
-[To The Space](https://www.to-the-space.space/) 는 장애물을 피해 로켓을 최대한 높이 발사하는 3D 웹 게임입니다.
+[To The Space](https://to-the-space.netlify.app/) 는 장애물을 피해 로켓을 최대한 높이 발사하는 3D 웹 게임입니다.
 
 <br>
 <br>
@@ -40,7 +40,7 @@
 # 🔗 Link
 
 ### Deploy Site
-👉 https://to-the-space.space
+👉 [https://to-the-space.space](https://to-the-space.netlify.app/)
 
 ### Github Repository
 👉 https://github.com/to-the-space/to-the-space
